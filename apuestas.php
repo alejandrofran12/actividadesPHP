@@ -1,24 +1,12 @@
 <?php
-$dinero = (float) 1000;
-$apuestaEnCurso = [];
-$historialApuestas = [];
 
-do{
-    echo "========RULETA========\n";
-    echo "1. Apostar por número\n";
-    echo "2. Apostar por color\n";
-    echo "3. Apostar por par/impar\n";
-    echo "4. Tirar la bola\n";
-    echo "5. Ver historial de apuestas\n";
-    echo "6. Apostar por docenas\n";
-    echo "7. Apostar por bajo/alto\n";
-    echo "8. Salir\n";
-    echo "======================\n";
-    echo "Tu saldo es: " . $dinero . " €\n";
-    echo"Tus apuestas actuales son: \n";
-    mostrarApuesta($apuestaEnCurso);
-    $opcion = (int)readline("Opcion: ");
+session_start();
 
+$_SESSION['dinero'] = 1000;
+$_SESSION['apuestasEnCurso'] = [];
+$_SESSION['historialDeApuestas'] = [];
+
+$opcion = (int) $_POST['opcion'] ?? 0;
     switch($opcion){
         case 1:
             $numeroApostado = apostarPorNumero();
@@ -85,7 +73,6 @@ do{
         default:
             echo "Opción no válida\n";
     }
-}while($opcion != 8);
 
 function tirarBola($apuestaEnCurso){
 
@@ -296,3 +283,31 @@ function historialApuesta($historial){
         echo "\n";
     }
 }
+
+?>
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>RULETA</h1>
+        <h2>Saldo disponible <?php echo $_SESSION['dinero']?></h2>
+        <h3>Realiza una apuesta</h3>
+        <form action="apuestas.php" method="post">
+            <select name="opcion">
+                <option value="1">Apostar por numero (0-36)</option>
+                <option value="2">Apostar por color(rojo/negro)</option>
+                <option value="3">Apostar por par o impar</option>
+                <option value="4">Apostar por docenas (1, 2, 3)</option>
+                <option value="5">Apostar por alto  bajo(1-18, 19-36)</option>
+            </select>
+            <h4>Apostar valor: </h4>
+            <input type="number" name="apuesta">
+            <input type="submit" name="enviar">
+        </form>
+        
+        <h3>Apuestas en curso</h3>
+        <?php foreach($_SESSION['historialDeApuestas'] as $apuesta){
+            echo ''. $apuesta .'';
+        }
+        ?> 
+    </body>
+</html>
