@@ -11,8 +11,8 @@ $opcion = (int) $_POST['opcion'] ?? 0;
         case 1:
             $numeroApostado = apostarPorNumero();
             $cantidad = apuesta($dinero);
-            $dinero = gestionarSaldo($dinero, $cantidad);
-            $apuestaEnCurso[] = [
+            $_SESSION['dinero']= gestionarSaldo($_SESSION['dinero'], $cantidad);
+            $_SESSION['historialDeApuestas'] = [
             "tipo" => "numero",
             "valor" => $numeroApostado,
             "cantidad" => $cantidad
@@ -21,8 +21,8 @@ $opcion = (int) $_POST['opcion'] ?? 0;
         case 2:
             $color = apostarPorColor();
             $cantidad = apuesta($dinero);
-            $dinero = gestionarSaldo($dinero, $cantidad);
-            $apuestaEnCurso[] = [
+            $_SESSION['dinero']= gestionarSaldo($_SESSION['dinero'], $cantidad);
+            $_SESSION['historialDeApuestas'] = [
             "tipo" => "color",
             "valor" => $color,
             "cantidad" => $cantidad
@@ -31,7 +31,7 @@ $opcion = (int) $_POST['opcion'] ?? 0;
         case 3:
             $parImpar = apostarPorParImpar();
             $cantidad = apuesta($dinero);
-            $dinero = gestionarSaldo($dinero, $cantidad);
+            $_SESSION['dinero']= gestionarSaldo($_SESSION['dinero'], $cantidad);
             $apuestaEnCurso[] = [
             "tipo" => "parImpar",
             "valor" => $parImpar,
@@ -50,7 +50,7 @@ $opcion = (int) $_POST['opcion'] ?? 0;
         case 6:
             $docena = apostarPorDocenas();
             $cantidad = apuesta($dinero);
-            $dinero = gestionarSaldo($dinero, $cantidad);
+            $_SESSION['dinero']= gestionarSaldo($_SESSION['dinero'], $cantidad);
             $apuestaEnCurso[] = [
             "tipo" => "docena",
             "valor" => $docena,
@@ -60,7 +60,7 @@ $opcion = (int) $_POST['opcion'] ?? 0;
         case 7:
             $bajoAlto = apostarPorBajoAlto();
             $cantidad = apuesta($dinero);
-            $dinero = gestionarSaldo($dinero, $cantidad);
+            $_SESSION['dinero']= gestionarSaldo($_SESSION['dinero'], $cantidad);
             $apuestaEnCurso[] = [
             "tipo" => "bajoAlto",
             "valor" => $bajoAlto,
@@ -167,7 +167,7 @@ echo "\nParidad: " . obtenerParidad($numeroSalido);
 }
 
 function apostarPorNumero(){
-    $numeroApostado = readline("Dime el numero que quieres apostar(0, 36): ");
+    $numeroApostado = (int) readline("Dime el numero que quieres apostar(0, 36): ");
     if($numeroApostado >= 0 && $numeroApostado <= 36){
         return $numeroApostado;    
     }else{
@@ -253,7 +253,7 @@ function obtenerAltoBajo($bajoAlto){
 }
 
 function apuesta($dinero){
-    $apostar = trim(readline("Cuanto quieres apostar €?: "));
+    $apostar = (int)trim(readline("Cuanto quieres apostar €?: "));
     if($dinero >= $apostar){
         return $apostar;
     }else{
@@ -261,7 +261,7 @@ function apuesta($dinero){
     }
 }
 
-function gestionarSaldo($dinero, $apostar){
+function gestionarSaldo($dinero, $apostar) :  int{
     return $dinero - $apostar;
 }
 
@@ -299,7 +299,9 @@ function historialApuesta($historial){
                 <option value="4">Apostar por docenas (1, 2, 3)</option>
                 <option value="5">Apostar por alto  bajo(1-18, 19-36)</option>
             </select>
-            <h4>Apostar valor: </h4>
+            <h4>Valor apostado: </h4>
+            <input type="text" name="valor">
+            <h4>Apostar cantidad de dinero: </h4>
             <input type="number" name="apuesta">
             <input type="submit" name="enviar">
         </form>
