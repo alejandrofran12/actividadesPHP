@@ -2,199 +2,171 @@
 
 session_start();
 
-$_SESSION['historialDeApuestas'] = [];
-$_SESSION['dinero'] = 1000;
+isset($_SESSION['historialDeApuestas']) ? $_SESSION['historialDeApuestas'] : $_SESSION['historialDeApuestas'] = [];
+isset($_SESSION['dinero']) ? $_SESSION['dinero'] : $_SESSION['dinero'] = 1000;
+isset($_SESSION['apuestasEnCurso']) ? $_SESSION['apuestasEnCurso'] : $_SESSION['apuestasEnCurso'] = [];
+$errores = [];
 
 
-$opcion = (int) $_POST['opcion'];
+$opcion = $_POST['opcion'] ?? null;
+
     switch($opcion){
         case 1:
-            $numeroApostado = apostarPorNumero();
-            $cantidad = apuesta($_SESSION['dinero']);
+            $numeroApostado = apostarPorNumero($errores);
+            $cantidad = apuesta($_SESSION['dinero'], $errores);
+            if($cantidad != null){
             $_SESSION['dinero'] = gestionarSaldo($_SESSION['dinero'], $cantidad);
             $_SESSION['apuestasEnCurso'][] = [
             "tipo" => "numero",
             "valor" => $numeroApostado,
             "cantidad" => $cantidad
             ];
+            }
             break;
         case 2:
-            $color = apostarPorColor();
-            $cantidad = apuesta($_SESSION['dinero']);
+            $color = apostarPorColor($errores);
+            $cantidad = apuesta($_SESSION['dinero'], $errores);
+            if($cantidad != null){
             $_SESSION['dinero']= gestionarSaldo($_SESSION['dinero'], $cantidad);
             $_SESSION['apuestasEnCurso'][] = [
             "tipo" => "color",
             "valor" => $color,
             "cantidad" => $cantidad
             ];
+            }
             break;
         case 3:
-            $parImpar = apostarPorParImpar();
-            $cantidad = apuesta($_SESSION['dinero']);
+            $parImpar = apostarPorParImpar($errores);
+            $cantidad = apuesta($_SESSION['dinero'], $errores);
+            if($cantidad != null){
             $_SESSION['dinero'] = gestionarSaldo($_SESSION['dinero'], $cantidad);
             $_SESSION['apuestasEnCurso'][] = [
             "tipo" => "parImpar",
             "valor" => $parImpar,
             "cantidad" => $cantidad
             ];
+            }
             break;
         case 4:
-            $historialApuestas[] = tirarBola($_SESSION['apuestasEnCurso']);
-            $apuestaEnCurso = [];
-            $dinero += $historialApuestas[count($_SESSION['historialDeApuestas']) - 1]["premio"];
+            tirarBola($_SESSION['apuestasEnCurso']);
+            $_SESSION['dinero'] += $_SESSION['historialDeApuestas'][count($_SESSION['historialDeApuestas']) - 1]["premio"];
+            header("Location: tirarBola.php");
             break; 
         case 5:
             echo "\n---Historial de apuestas---\n";
             historialApuesta($historialApuestas); //MOVERLO
             break;
         case 6:
-            $docena = apostarPorDocenas();
-            $cantidad = apuesta($_SESSION['dinero']);
+            $docena = apostarPorDocenas($errores);
+            $cantidad = apuesta($_SESSION['dinero'], $errores);
+            if($cantidad != null){
             $_SESSION['dinero']= gestionarSaldo($_SESSION['dinero'], $cantidad);
-            $apuestaEnCurso[][] = [
+            $_SESSION['apuestasEnCurso'][] = [
             "tipo" => "docena",
             "valor" => $docena,
             "cantidad" => $cantidad
             ];
+            }
             break;          
         case 7:
-            $bajoAlto = apostarPorBajoAlto();
-            $cantidad = apuesta($_SESSION['dinero']);
+            $bajoAlto = apostarPorBajoAlto($errores);
+            $cantidad = apuesta($_SESSION['dinero'], $errores);
+            if($cantidad != null){
             $_SESSION['dinero']= gestionarSaldo($_SESSION['dinero'], $cantidad);
-            $apuestaEnCurso[][] = [
+            $_SESSION['apuestasEnCurso'][] = [
             "tipo" => "bajoAlto",
             "valor" => $bajoAlto,
             "cantidad" => $cantidad
             ];
+            }
             break;
         case 8:
             echo "Has elegido salir\n";
             break;
-        default:
-            echo "Opción no válida\n";
     }
 
 function tirarBola($apuestaEnCurso){
 
 $resultadoFinal = [];
-$premio = 0;
 $ganado = null;
 $informacionApuesta = [];
+$_SESSION['premio'] = 0;
 
-echo "\n---Girando Ruleta---";
-echo "\n----------------------";
 $numeroSalido = random_int(0, 36);
-echo "\nNumero salido: " . $numeroSalido;
-echo "\nColor salido: " . obtenerColor($numeroSalido);
-echo "\nParidad: " . obtenerParidad($numeroSalido);
 
     foreach($apuestaEnCurso as $valor){
         switch($valor["tipo"]){
             case "numero":
-                if($valor["valor"] == $numeroSalido){
-                    $premio += $valor["cantidad"] * 36;
+                if($valor["valor"] === $numeroSalido){
+                    $_SESSION['premio'] += $valor["cantidad"] * 36;
                     $resultadoFinal[] = "Numero: " . $valor["valor"] . " -> Ganador";
-                }else{
-                    $premio -= $valor["cantidad"];
-                    $resultadoFinal[] = "Numero: " . $valor["valor"] . " -> Perdedor";
                 }
                 break;
             case "color":
-                if($valor["valor"] == obtenerColor($numeroSalido)){
-                    $premio += $valor["cantidad"] * 2;
+                if($valor["valor"] === obtenerColor($numeroSalido)){
+                    $_SESSION['premio'] += $valor["cantidad"] * 2;
                     $resultadoFinal[] = "Color: " . obtenerColor($numeroSalido) . " -> Ganador";
-                }else{
-                    $premio -= $valor["cantidad"];
-                    $resultadoFinal[] = "Color: " . obtenerColor($numeroSalido) . " -> Perdedor";
                 }
                 break;
             case "parImpar":
-                if($valor["valor"] == obtenerParidad($numeroSalido)){
-                    $premio += $valor["cantidad"] * 2;
+                if($valor["valor"] === obtenerParidad($numeroSalido)){
+                    $_SESSION['premio'] += $valor["cantidad"] * 2;
                     $resultadoFinal[] = "Par/Impar: " . obtenerParidad($numeroSalido) . " -> Ganador";
-                }else{
-                    $premio -= $valor["cantidad"];
-                    $resultadoFinal[] = "Par/Impar: " . obtenerParidad($numeroSalido) . " -> Perdedor";
                 }
                 break;
             case "docena":    
-                if($valor["valor"] == obtenerDocena($numeroSalido)){
-                    $premio += $valor["cantidad"] * 3;
+                if($valor["valor"] === obtenerDocena($numeroSalido)){
+                    $_SESSION['premio'] += $valor["cantidad"] * 3;
                     $resultadoFinal[] = "Docena: " . obtenerDocena($numeroSalido) . " -> Ganador";
-                }else{
-                    $premio -= $valor["cantidad"];
-                    $resultadoFinal[] = "Docena: " . obtenerDocena($numeroSalido) . " -> Perdedor";
                 }
                 break;
             case "bajoAlto":
-                if($valor["valor"] == obtenerAltoBajo($numeroSalido)){
-                    $premio += $valor["cantidad"] * 2;
+                if($valor["valor"] === obtenerAltoBajo($numeroSalido)){
+                    $_SESSION['premio'] += $valor["cantidad"] * 2;
                     $resultadoFinal[] = "Bajo/Alto: " . obtenerAltoBajo($numeroSalido) . " -> Ganador";
-                }else{
-                    $premio -= $valor["cantidad"];
-                    $resultadoFinal[] = "Bajo/Alto: " . obtenerAltoBajo($numeroSalido) . " -> Perdedor";
                 }
                 break;
         }
     }
 
     $_SESSION['numeroSalido'] = $numeroSalido;  
-    $_SESSION['premio'] = $premio; 
     $_SESSION['color'] = obtenerColor($numeroSalido);
-    $_SESSION['parImpar'] = obtenerParidad($numeroSalido);            
-
-    header("Location: tirarBola.php");            
-    if($premio < 0){
-        echo "\nHas perdido!";
-        $ganado = "Perdida";
-    }else{
-        echo "\nHas ganado!";
-        echo "\nTus ganancias han sido de: " . $premio . "€"; 
-        $ganado = "Ganada";
-    }
-    
+    $_SESSION['paridad'] = obtenerParidad($numeroSalido);            
+                
     $informacionApuesta = [
-        "nDeApuestas" => count($apuestaEnCurso),
-        "numeroSalido" => $numeroSalido,
-        "colorSalido" => obtenerColor($numeroSalido),
-        "parImpar" => obtenerParidad($numeroSalido),
-        "docena" => obtenerDocena($numeroSalido),
-        "bajoAlto" => obtenerAltoBajo($numeroSalido),
-        "premio" => $premio,
-        "ganado" => $ganado
+    "nDeApuestas" => count($apuestaEnCurso),
+    "numeroSalido" => $numeroSalido,
+    "colorSalido" => obtenerColor($numeroSalido),
+    "parImpar" => obtenerParidad($numeroSalido),
+    "docena" => obtenerDocena($numeroSalido),
+    "bajoAlto" => obtenerAltoBajo($numeroSalido),
+    "premio" => $_SESSION['premio'],
+    "ganado" => $ganado
     ];
-    
-    $_SESSION['informacionApuesta'] = $informacionApuesta;
 
-    echo "\n----------------------";
-    echo "\nResultado de las apuestas: \n";
-    foreach($resultadoFinal as $apuesta){
-        echo $apuesta . "\n";
-    }
-    echo "\n";
-    return $informacionApuesta;
+    $_SESSION['historialDeApuestas'][] = $informacionApuesta;
 }
 
-function apostarPorNumero(){
-    $numeroApostado = (int) $_POST['valor'];
+function apostarPorNumero(&$errores){
+    $numeroApostado = $_POST['valor'];
     if($numeroApostado >= 0 && $numeroApostado <= 36){
         return $numeroApostado;    
     }else{
-        echo "Número no válido\n";
+        $errores[] = "El número debe ser del 0 al 36";
     }
 }
 
-function apostarPorColor(){
+function apostarPorColor() : String{
     $color = $_POST['valor'];
     if($color == "rojo" || $color == "negro"){
         return $color;
     }else{
-        echo "Color no válido\n";
+        $errores[] = "El color debe ser rojo o negro";
     }
 
 }
 
-function obtenerColor($numero){
+function obtenerColor($numero) : String{
     $rojo = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
     if(in_array($numero, $rojo)){
         return "rojo";
@@ -208,7 +180,7 @@ function apostarPorParImpar(){
     if($parImpar == "par" || $parImpar == "impar"){
         return $parImpar;
     }else{
-        echo "Opción no válida\n";
+        $errores[] = "Debes elegir entre par o impar";
     }
 }
 
@@ -226,7 +198,7 @@ function apostarPorDocenas(){
     if($docena >= 1 && $docena <= 3){
         return $docena;
     }else{
-        echo "Docena no válida\n";
+        $errores[] = "Debes elegir la docena correcta (1, 2 o 3)";
     }
 }
 
@@ -247,7 +219,7 @@ function apostarPorBajoAlto(){
     if($bajoAlto == "bajo" || $bajoAlto == "alto"){
         return $bajoAlto;
     }else{
-        echo "Opción no válida\n";
+        $errores[] = "El color debe ser rojo o negro";
     }
 }
 
@@ -261,16 +233,16 @@ function obtenerAltoBajo($bajoAlto){
     }
 }
 
-function apuesta($dinero){
+function apuesta($dinero, &$errores){
     $apostar = $_POST['cantidad'];
     if($dinero >= $apostar){
         return $apostar;
     }else{
-        echo "No tienes suficiente saldo";
+        $errores[] = "No tienes suficiente saldo";
     }
 }
 
-function gestionarSaldo($dinero, $apostar) :  int{
+function gestionarSaldo($dinero, $apostar){
     return $dinero - $apostar;
 }
 
@@ -298,15 +270,15 @@ function historialApuesta($historial){
 <html>
     <body>
         <h1>RULETA</h1>
-        <h2>Saldo disponible <?php echo $_SESSION['dinero']?></h2>
-        <h3>Realiza una apuesta</h3>
+        <h2>Saldo disponible: <?php echo $_SESSION['dinero']?></h2>
+        <h3>Realiza una apuesta:</h3>
         <form action="apuestas.php" method="post">
             <select name="opcion">
                 <option value="1">Apostar por numero (0-36)</option>
                 <option value="2">Apostar por color(rojo/negro)</option>
                 <option value="3">Apostar por par o impar</option>
-                <option value="4">Apostar por docenas (1, 2, 3)</option>
-                <option value="5">Apostar por alto  bajo(1-18, 19-36)</option>
+                <option value="6">Apostar por docenas (1, 2, 3)</option>
+                <option value="7">Apostar por alto  bajo(1-18, 19-36)</option>
             </select>
             <h4>Valor apostado: </h4>
             <input type="text" name="valor">
@@ -317,14 +289,24 @@ function historialApuesta($historial){
         <form method="post">
             <button name="opcion" value="4">Girar ruleta</button>
         </form>
+        <form method="post">
+            <button name="opcion" value="5">Visualizar historial</button>
+        </form>
 
         <h3>Apuestas en curso:</h3>
-        <?php 
+        <?php
+        if(count($errores) > 0){
+            foreach($errores as $error){
+                echo $error . "<br>";
+            }
+        }
+        
         foreach ($_SESSION['apuestasEnCurso'] as $apuesta) {
             echo $apuesta['tipo'] . "<br>";
             echo $apuesta['valor'] . "<br>";
             echo $apuesta['cantidad'] . "<br>";
-        }
+        }    
         ?> 
+        
     </body>
 </html>
