@@ -11,7 +11,8 @@ session_start();
         <h2>Color: <?= $_SESSION['color'] ?></h2>
         <h2>Paridad: <?= $_SESSION['paridad'] ?></h2>
         <?php
-            if($_SESSION['premio'] < 0){
+            
+            if($_SESSION['premio'] == 0){
                 echo "<h2>" . "\nHas perdido!" . "</h2>";
                 $_SESSION['ganada'] = "Perdida";
             }else{

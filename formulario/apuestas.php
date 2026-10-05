@@ -14,7 +14,7 @@ $opcion = $_POST['opcion'] ?? null;
         case 1:
             $numeroApostado = apostarPorNumero($errores);
             $cantidad = apuesta($_SESSION['dinero'], $errores);
-            if($cantidad != null){
+            if($cantidad != null || $numeroApostado != -1){
             $_SESSION['dinero'] = gestionarSaldo($_SESSION['dinero'], $cantidad);
             $_SESSION['apuestasEnCurso'][] = [
             "tipo" => "numero",
@@ -54,7 +54,7 @@ $opcion = $_POST['opcion'] ?? null;
             break; 
         case 5:
             echo "\n---Historial de apuestas---\n";
-            historialApuesta($historialApuestas); //MOVERLO
+            historialApuesta($_SESSION['historialDeApuestas']); //MOVERLO
             break;
         case 6:
             $docena = apostarPorDocenas($errores);
@@ -80,14 +80,10 @@ $opcion = $_POST['opcion'] ?? null;
             ];
             }
             break;
-        case 8:
-            echo "Has elegido salir\n";
-            break;
     }
 
 function tirarBola($apuestaEnCurso){
 
-$resultadoFinal = [];
 $ganado = null;
 $informacionApuesta = [];
 $_SESSION['premio'] = 0;
@@ -145,18 +141,20 @@ $numeroSalido = random_int(0, 36);
     ];
 
     $_SESSION['historialDeApuestas'][] = $informacionApuesta;
+    
 }
 
-function apostarPorNumero(&$errores){
+function apostarPorNumero(array &$errores) : int{
     $numeroApostado = $_POST['valor'];
     if($numeroApostado >= 0 && $numeroApostado <= 36){
         return $numeroApostado;    
     }else{
         $errores[] = "El número debe ser del 0 al 36";
+        return -1;
     }
 }
 
-function apostarPorColor() : String{
+function apostarPorColor(array &$errores) : String{
     $color = $_POST['valor'];
     if($color == "rojo" || $color == "negro"){
         return $color;
@@ -166,7 +164,7 @@ function apostarPorColor() : String{
 
 }
 
-function obtenerColor($numero) : String{
+function obtenerColor(int $numero) : String{
     $rojo = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
     if(in_array($numero, $rojo)){
         return "rojo";
@@ -175,7 +173,7 @@ function obtenerColor($numero) : String{
     }
 }
 
-function apostarPorParImpar(){
+function apostarPorParImpar(array &$errores) : String{
     $parImpar = $_POST['valor'];
     if($parImpar == "par" || $parImpar == "impar"){
         return $parImpar;
@@ -184,7 +182,7 @@ function apostarPorParImpar(){
     }
 }
 
-function obtenerParidad($numero){
+function obtenerParidad(int $numero) : String{
     if($numero % 2 == 0){
         return "par";
     } else {
@@ -192,8 +190,7 @@ function obtenerParidad($numero){
     }
 }
 
-function apostarPorDocenas(){
-    echo "DOCENAS: 1-12, 13-24, 25-36\n";
+function apostarPorDocenas(array &$errores) : int{
     $docena = $_POST['valor'];
     if($docena >= 1 && $docena <= 3){
         return $docena;
@@ -202,7 +199,7 @@ function apostarPorDocenas(){
     }
 }
 
-function obtenerDocena($numero){
+function obtenerDocena(int $numero) : int{
     if($numero >= 1 && $numero <= 12){
         return 1;
     } elseif($numero >= 13 && $numero <= 24){
@@ -214,7 +211,7 @@ function obtenerDocena($numero){
     }
 }
 
-function apostarPorBajoAlto(){
+function apostarPorBajoAlto(array &$errores) : String{
     $bajoAlto = $_POST['valor'];
     if($bajoAlto == "bajo" || $bajoAlto == "alto"){
         return $bajoAlto;
@@ -223,7 +220,7 @@ function apostarPorBajoAlto(){
     }
 }
 
-function obtenerAltoBajo($bajoAlto){
+function obtenerAltoBajo($bajoAlto) : String{
     if($bajoAlto >= 1 && $bajoAlto <= 18){
         return "bajo";
     } elseif($bajoAlto >= 19 && $bajoAlto <= 36){
@@ -233,7 +230,7 @@ function obtenerAltoBajo($bajoAlto){
     }
 }
 
-function apuesta($dinero, &$errores){
+function apuesta(int $dinero, array &$errores) : int{
     $apostar = $_POST['cantidad'];
     if($dinero >= $apostar){
         return $apostar;
@@ -256,7 +253,7 @@ function mostrarApuesta($apuestaEnCurso){
     echo "\n";
 }
 
-function historialApuesta($historial){
+function historialApuesta(array $historial){
     foreach($historial as $apuestas){
         foreach($apuestas as $key =>$apuesta){
             echo "\n". $key . ": " . $apuesta;
@@ -292,10 +289,12 @@ function historialApuesta($historial){
         <form method="post">
             <button name="opcion" value="5">Visualizar historial</button>
         </form>
+        
 
         <h3>Apuestas en curso:</h3>
         <?php
         if(count($errores) > 0){
+            "<h3>Ha fallado algo</h3>";
             foreach($errores as $error){
                 echo $error . "<br>";
             }
