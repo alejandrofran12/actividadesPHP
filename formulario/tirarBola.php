@@ -23,12 +23,11 @@ session_start();
         ?>   
         <h3>Apuestas realizadas</h3>
         <?php 
-        foreach ($_SESSION['apuestasEnCurso'] as $apuesta) {
-            echo $apuesta['tipo'] . "<br>";
-            echo $apuesta['valor'] . "<br>";
-            echo $apuesta['cantidad'] . "<br>";
+        foreach ($_SESSION['$resultadoFinal'] as $apuesta) {
+            echo $apuesta . "<br>";
         }
         $_SESSION['apuestasEnCurso'] = [];
+        $_SESSION['$resultadoFinal'] = [];
         ?>
         <a href="apuestas.php"><button type="button">Volver</button></a>
     </body>
