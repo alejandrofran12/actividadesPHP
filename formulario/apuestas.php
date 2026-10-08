@@ -92,11 +92,13 @@ function comprobarArchivo(&$errores){
     $rutaArchivo = $directorio . basename($_FILES["fileToUpload"]["name"]);
   
     $tipoDeArchivo = strtolower(pathinfo($rutaArchivo, PATHINFO_EXTENSION));
-    if(isset($_POST['opcion'])){
+    if(!empty($_FILES["fileToUpload"]["tmp_name"]) && isset($_POST['opcion'])){
             if($tipoDeArchivo != "pdf"){
                 $errores[] = "El archivo debe tener extension pdf";
             }else{
-                if(move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $rutaArchivo)){
+                $hashAleatorio = bin2hex(random_bytes(32));
+                $nuevoNombre = $directorio . $hashAleatorio;
+                if(move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $nuevoNombre)){
                     echo "ha sido subido";
                 }else{
                     echo "no ha sido subido";
@@ -328,7 +330,7 @@ function historialApuesta(array $historial){
         Subir archivo comprobante de tu banco:
         <form method="post" enctype="multipart/form-data">
               <input type="file" name="fileToUpload">
-              <input type="submit" name="opcion" value="9">Retirar Dinero</input>              
+              <button type="submit" name="opcion" value="9">Retirar Dinero</button>              
         </form><br>
         
 
