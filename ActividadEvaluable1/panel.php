@@ -7,4 +7,4 @@ if(!isset($_SESSION['dni'])){
 }
 
 ?>
-<h1>BIENVENIDO . <?php $_SESSION['nombre'] . ?> </h1>
+<h1>BIENVENIDO . <?php echo $_SESSION['nombre'] ?> </h1>

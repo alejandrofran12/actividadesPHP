@@ -11,19 +11,21 @@ $dni = $_POST['dni'];
 $contra = $_POST['contrasena'];
 
 try{
-    $sql = "SELECT nombre, contrasena, nombre FROM clientes WHERE dni = ?";
+    $sql = "SELECT nombre, contrasena, dni FROM clientes WHERE dni = ?";
     $resultado = $conn->prepare($sql);
     $resultado->execute([$dni]);
-    $usuario = $dsdsdresultado->fetch();
-    if($dni == $usuario['dni'] && $contra == $usuario['contrasena']){
+    $usuario = $resultado->fetch();
+    
+    if($usuario && password_verify($contra, $usuario['contrasena'])){
         $_SESSION['dni'] = $usuario['dni'];
         $_SESSION['contrasena'] = $usuario['contrasena'];
         $_SESSION['nombre'] = $usuario['nombre'];
-        echo "sesion iniciada"; 
+        header('Location: panel.php'); 
     }else{
+        $_SESSION['errores'] = "Credenciales incorrectas";
         header('Location: login.php');
     }
 }catch(PDOException $e){
-
+    echo "". $e->getMessage();
 }
 

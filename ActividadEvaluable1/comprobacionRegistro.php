@@ -11,8 +11,13 @@ $nombre = $_POST['nombre'];
 $apellidos = $_POST['apellidos'];
 $dni = $_POST['dni'];
 $fecha = $_POST['fecha_nacimiento'];
-$contrasena = $_POST['contrasena'];
-$archivo = file_get_contents($_FILES['archivoUsuario']['tmp_name']);
+$contrasena = hashearContraseña();
+
+$ruta = "permisos/";
+$rutaYarchivo = $ruta . basename($_FILES['archivoUsuario']['name']);
+$extension = strtolower(pathinfo($_FILES['archivoUsuario']["name"], PATHINFO_EXTENSION));
+fotoDNI($rutaYarchivo);
+$archivo = $ruta . $_FILES['archivoUsuario']['name']; 
 
 if(!isset($_SESSION['errores'])){
     $_SESSION['errores'] = null;
@@ -31,5 +36,13 @@ if(empty($nombre ) && empty($apellidos) && empty($dni) && empty($fecha) && empty
     }
 }
 
+function fotoDNI($rutaArchivo){
+    move_uploaded_file($_FILES['archivoUsuario']['tmp_name'], $rutaArchivo);
+}
 
+function hashearContraseña(){
+    $contrasena = password_hash($_POST['contrasena'], PASSWORD_BCRYPT);
+    return $contrasena;
+}
 ?>
+

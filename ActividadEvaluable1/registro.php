@@ -18,6 +18,10 @@ include("conexion.php");
                 <button type="submit">Registrarse</button>
             </form>
             <?php
+            if(!isset($_SESSION['errores'])){
+                $_SESSION['errores'] = null;
+            }
+            
             if($_SESSION['errores'] != NULL){
                 echo "<p style='color: red;'>" . $_SESSION['errores'] . "</p>";
             }
