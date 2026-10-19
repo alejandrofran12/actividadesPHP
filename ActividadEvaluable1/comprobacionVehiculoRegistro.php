@@ -16,16 +16,16 @@ $asientos = $_POST['asientos'];
 $transmision = $_POST['transmision'];
 $motorizacion = $_POST['motorizacion'];
 $clase = $_POST['clase'];
+$precio = $_POST['precio'];
 
 if(!isset($_SESSION['errores'])){
     $_SESSION['errores'] = null;
 }
 
-
     try {
-        $sql = "INSERT INTO vehiculos (asientos, clase, color, marca, matricula, modelo, motorizacion, puertas, transmicion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO vehiculos (asientos, clase, color, marca, matricula, modelo, motorizacion, puertas, transmicion, precio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->execute([$asientos, $clase, $color, $marca, $matricula, $modelo, $motorizacion, $puertas, $transmision]);
+        $stmt->execute([$asientos, $clase, $color, $marca, $matricula, $modelo, $motorizacion, $puertas, $transmision, $precio]);
     } catch(PDOException $e) {
         echo "Error: " . $e->getMessage();
     }

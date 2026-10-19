@@ -1,7 +1,8 @@
 <?php
 session_start();
+include ("conexion.php");
 
-if(!isset($_SESSION['dni'])){
+if(!isset($_SESSION['dniAdmin'])){
     header('location: login.php');
     exit;
 }
@@ -45,9 +46,12 @@ if(!isset($_SESSION['dni'])){
                     <option value="E">E</option>
                     <option value="F">F</option>
                 </select><br>
-                <button type="submit">Registrarse</button>
+                Precio: <input type="number" name="precio">
+                <button type="submit">Registrar vehículo</button>
             </form>
             <?php
+
+
             if(!isset($_SESSION['errores'])){
                 $_SESSION['errores'] = null;
             }
@@ -57,9 +61,25 @@ if(!isset($_SESSION['dni'])){
             }
 
             $_SESSION['errores'] = null;
+
+            $sql = "SELECT matricula FROM vehiculos";
+            $resultado = $conn->query($sql);
+
             ?>
+
+            <h2>Añadir/Cerrar Vehiculo</h2>
+            <form action="comprobacionBajaVehiculo.php" method="POST">
+                <select name="vehiculo">
+                    <?php
+                        while($row = $resultado->fetch()){
+                            echo "<option value=" . $row['matricula'] . ">" . $row['matricula'] . "</option>";
+                        }
+                    ?>
+                </select>
+                Fecha baja: <input type="date" name="fechaBaja">
+                Fecha alta: <input type="date" name="fechaAlta">
+                <button type="submit">Dar de baja</button>
+            </form>
         </body>
     </head>
 </html>
-<h1>BIENVENIDO . <?php echo $_SESSION['nombre'] ?> </h1>
-<h2>INTRODUCIR UN NUEVO VEHICULO</h2>
