@@ -15,7 +15,7 @@ $contrasena = hashearContraseña();
 
 $ruta = "permisos/";
 $rutaYarchivo = $ruta . basename($_FILES['archivoUsuario']['name']);
-$extension = strtolower(pathinfo($_FILES['archivoUsuario']["name"], PATHINFO_EXTENSION));
+//$extension = strtolower(pathinfo($_FILES['archivoUsuario']["name"], PATHINFO_EXTENSION));
 fotoDNI($rutaYarchivo);
 $archivo = $ruta . $_FILES['archivoUsuario']['name']; 
 
@@ -25,6 +25,9 @@ if(!isset($_SESSION['errores'])){
 
 if(empty($nombre ) && empty($apellidos) && empty($dni) && empty($fecha) && empty($contrasena) && empty($archivo)){
     $_SESSION['errores'] = "Debes rellenar todos los campos";
+    header ("Location: registro.php");
+}elseif(buscarUsuario($dni, $conn) == true){
+    $_SESSION['errores'] = "Este dni ya existe";
     header ("Location: registro.php");
 }else{
     try {
@@ -43,6 +46,15 @@ function fotoDNI($rutaArchivo){
 function hashearContraseña(){
     $contrasena = password_hash($_POST['contrasena'], PASSWORD_BCRYPT);
     return $contrasena;
+}
+
+function buscarUsuario($dni, $conn){
+    $sql = "SELECT dni FROM clientes WHERE dni = ?";
+    $resultado = $conn->prepare($sql);
+    $resultado->execute([$dni]);
+    $dniUsuario = $resultado->fetch();
+    
+    return $dniUsuario;
 }
 ?>
 

@@ -11,16 +11,26 @@ $dni = $_POST['dni'];
 $contra = $_POST['contrasena'];
 
 try{
-    $sql = "SELECT nombre, contrasena, dni FROM clientes WHERE dni = ?";
-    $resultado = $conn->prepare($sql);
-    $resultado->execute([$dni]);
-    $usuario = $resultado->fetch();
+    //cliente
+    $sql1 = "SELECT nombre, contrasena, dni FROM clientes WHERE dni = ?";
+    $resultadoCliente = $conn->prepare($sql1);
+    $resultadoCliente->execute([$dni]);
+    $usuarioCliente = $resultadoCliente->fetch();
     
-    if($usuario && password_verify($contra, $usuario['contrasena'])){
-        $_SESSION['dni'] = $usuario['dni'];
-        $_SESSION['contrasena'] = $usuario['contrasena'];
-        $_SESSION['nombre'] = $usuario['nombre'];
+    //admin
+    $sql2 = "SELECT nombre, contrasena, dni FROM administradores WHERE dni = ?";
+    $resultadoAdmin = $conn->prepare($sql2);
+    $resultadoAdmin->execute([$dni]);
+    $usuarioAdmin = $resultadoAdmin->fetch();
+
+    if(password_verify($contra, $usuarioCliente['contrasena'])){
+        $_SESSION['dni'] = $usuarioCliente['dni'];
+        $_SESSION['nombre'] = $usuarioCliente['nombre'];
         header('Location: panel.php'); 
+    }elseif($contra === $usuarioAdmin['contrasena']){
+        $_SESSION['nombre'] = $usuarioAdmin['nombre'];
+        $_SESSION['dni'] = $usuarioAdmin['dni'];
+        header('Location: panelAdmin.php');
     }else{
         $_SESSION['errores'] = "Credenciales incorrectas";
         header('Location: login.php');
