@@ -27,9 +27,7 @@ if(!isset($_SESSION['errores'])){
         $stmt = $conn->prepare($sql);
         $stmt->execute([$asientos, $clase, $color, $marca, $matricula, $modelo, $motorizacion, $puertas, $transmision, $precio]);
     } catch(PDOException $e) {
-        echo "Error: " . $e->getMessage();
+        echo "Error: " . $e->getMessage(); 
     }
-
-
 
 ?>

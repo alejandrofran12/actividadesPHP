@@ -63,22 +63,39 @@ if(!isset($_SESSION['dniAdmin'])){
             $_SESSION['errores'] = null;
 
             $sql = "SELECT matricula FROM vehiculos";
-            $resultado = $conn->query($sql);
+            $resultado1 = $conn->query($sql);
 
             ?>
 
             <h2>Añadir/Cerrar Vehiculo</h2>
             <form action="comprobacionBajaVehiculo.php" method="POST">
-                <select name="vehiculo">
+                <select name="matricula">
                     <?php
-                        while($row = $resultado->fetch()){
-                            echo "<option value=" . $row['matricula'] . ">" . $row['matricula'] . "</option>";
+                        echo "<option value=''>-- Selecciona --</option>";
+                        while($row = $resultado1->fetch()){
+                            echo "<option value = " . $row['matricula'] . ">" . $row['matricula'] . "</option>";
                         }
                     ?>
                 </select>
                 Fecha baja: <input type="date" name="fechaBaja">
                 Fecha alta: <input type="date" name="fechaAlta">
                 <button type="submit">Dar de baja</button>
+            </form>
+            <?php
+                $sql="SELECT matricula_id FROM cierreVehiculo";
+                $resultado2 = $conn->query($sql);
+            ?>
+
+            <form action="comprobacionAltaVehiculo.php" method="POST">
+                <select name="matricula">
+                    <?php
+                        echo "<option value=''>-- Selecciona --</option>";
+                        while($row = $resultado2->fetch()){
+                            echo "<option value = " . $row['matricula_id'] . ">" . $row['matricula_id'] . "</option>";
+                        }
+                    ?>
+                </select>
+                <button type="submit">Dar de Alta</button>
             </form>
         </body>
     </head>

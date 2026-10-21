@@ -13,7 +13,8 @@ if(!isset($_SESSION['dni'])){
         <h1>BIENVENIDO . <?php echo $_SESSION['nombre'] ?> </h1>
 <?php
 try {
-    $sql = "SELECT DISTINCT marca, modelo, motorizacion, transmicion, clase FROM vehiculos";
+    $sql = "SELECT DISTINCT marca, modelo, motorizacion, transmicion, clase FROM vehiculos WHERE NOT EXISTS (SELECT 1 FROM cierreVehiculo 
+    WHERE vehiculo)";
     $result = $conn->query($sql);
     $rows = $result->fetchAll();
 
@@ -23,7 +24,7 @@ try {
     if ($hayclaseA) {
         echo "<table><tr><th>CLASE A</th></tr>";
         foreach ($rows as $row) {
-            if ($row['clase'] === 'A') {
+            if ($row['clase'] === 'A' ) {
                 echo "<tr>";
                 echo "<td>" . htmlspecialchars($row['marca']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['modelo']) . "</td>";
