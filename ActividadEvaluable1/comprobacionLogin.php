@@ -26,7 +26,7 @@ try{
     if(password_verify($contra, $usuarioCliente['contrasena'])){
         $_SESSION['dni'] = $usuarioCliente['dni'];
         $_SESSION['nombre'] = $usuarioCliente['nombre'];
-        header('Location: panel.php'); 
+        header('Location: archivosCliente/principal.php'); 
     }elseif($contra === $usuarioAdmin['contrasena']){
         $_SESSION['nombre'] = $usuarioAdmin['nombre'];
         $_SESSION['dniAdmin'] = $usuarioAdmin['dni'];

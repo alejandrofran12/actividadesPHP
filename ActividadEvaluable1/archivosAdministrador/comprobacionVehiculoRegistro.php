@@ -22,6 +22,15 @@ if(!isset($_SESSION['errores'])){
     $_SESSION['errores'] = null;
 }
 
+if(empty($matricula) || empty($marca)|| empty($modelo) || empty($color) || empty($puertas) || empty($transmision) || empty($motorizacion) ||
+empty($clase) || empty($precio) || empty($asientos)){
+    $_SESSION['errores'] = [
+        'destino' => 'comprobacionVehiculoRegistro.php',
+        'mensaje' => 'campos vacios',
+    ];
+    header('Location: panelAdmin.php');
+    exit;
+}
     try {
         $sql = "INSERT INTO vehiculos (asientos, clase, color, marca, matricula, modelo, motorizacion, puertas, transmicion, precio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
@@ -30,4 +39,3 @@ if(!isset($_SESSION['errores'])){
         echo "Error: " . $e->getMessage(); 
     }
 
-?>

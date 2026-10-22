@@ -7,14 +7,18 @@ if(!isset($_SESSION['dni'])){
     exit;
 }
 
+$fechaRecogida = $_POST['fechaRecogida'];
+$fechaDevolucion = $_POST['fechaDevolucion'];
+
 ?>
 <DOCTYPE html>
     <body>
-        <h1>BIENVENIDO . <?php echo $_SESSION['nombre'] ?> </h1>
+        <h1>Coches disponibles para esa fecha</h1>
 <?php
 try {
-    $sql = "SELECT DISTINCT marca, modelo, motorizacion, transmicion, clase FROM vehiculos WHERE NOT EXISTS (SELECT 1 FROM cierreVehiculo 
-    WHERE vehiculo)";
+    $sql = "SELECT DISTINCT marca, modelo, motorizacion, transmicion, clase FROM vehiculos v WHERE NOT EXISTS 
+    (SELECT 1 FROM vehiculos WHERE fechaCierre < $fechaRecogida AND fechaApertura > $fechaDevolucion); ";
+
     $result = $conn->query($sql);
     $rows = $result->fetchAll();
 
@@ -36,6 +40,9 @@ try {
     echo "</table>";
     }
 
+    ?>
+
+    <?php
     //comprobar si hay clases B
     $hayclaseB = in_array('B', array_column($rows, 'clase'), true);
     

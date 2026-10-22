@@ -56,11 +56,9 @@ if(!isset($_SESSION['dniAdmin'])){
                 $_SESSION['errores'] = null;
             }
             
-            if($_SESSION['errores'] != NULL){
-                echo "<p style='color: red;'>" . $_SESSION['errores'] . "</p>";
+            if($_SESSION['errores'] != NULL && $_SESSION['errores']['destino'] === 'comprobacionVehiculoRegistro.php'){
+                echo "<p style='color: red;'>" . $_SESSION['errores']['mensaje'] . "</p>";
             }
-
-            $_SESSION['errores'] = null;
 
             $sql = "SELECT matricula FROM vehiculos";
             $resultado1 = $conn->query($sql);
@@ -82,7 +80,7 @@ if(!isset($_SESSION['dniAdmin'])){
                 <button type="submit">Dar de baja</button>
             </form>
             <?php
-                $sql="SELECT matricula_id FROM cierreVehiculo";
+                $sql="SELECT matricula_id FROM cierrevehiculo";
                 $resultado2 = $conn->query($sql);
             ?>
 
@@ -97,6 +95,13 @@ if(!isset($_SESSION['dniAdmin'])){
                 </select>
                 <button type="submit">Dar de Alta</button>
             </form>
+            <?php
+
+                if($_SESSION['errores'] != NULL && $_SESSION['errores']['destino'] === 'comprobacionBajaVehiculo.php'){
+                echo "<p style='color: red;'>" . $_SESSION['errores']['mensaje'] . "</p>";
+                }
+                $_SESSION['errores'] = null;
+            ?>
         </body>
     </head>
 </html>
