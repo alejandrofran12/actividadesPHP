@@ -16,17 +16,27 @@ $fechaDevolucion = $_POST['fechaDevolucion'];
         <h1>Coches disponibles para esa fecha</h1>
 <?php
 try {
-    $sql = "SELECT DISTINCT marca, modelo, motorizacion, transmicion, clase FROM vehiculos v WHERE NOT EXISTS 
-    (SELECT 1 FROM vehiculos WHERE fechaCierre < $fechaRecogida AND fechaApertura > $fechaDevolucion); ";
+    $sql = "SELECT DISTINCT marca, modelo, motorizacion, transmicion, clase, precio FROM vehiculos v WHERE NOT EXISTS 
+    (SELECT 1 FROM cierrevehiculo c WHERE c.matricula_id = v.matricula AND 
+    (c.fechaCierre BETWEEN ? AND ? OR c.fechaApertura BETWEEN ? AND ?));";
 
-    $result = $conn->query($sql);
+    $result = $conn->prepare($sql);
+    $result->execute([$fechaRecogida, $fechaDevolucion, $fechaRecogida, $fechaDevolucion]);
     $rows = $result->fetchAll();
+
+    //comprobar descuento al cliente
+    $recogida   = new DateTime($fechaRecogida);     
+    $devolucion = new DateTime($fechaDevolucion);   
+
+    $dias = $recogida->diff($devolucion)->days + 1;
+    
 
     //comprobar si hay clases A
     $hayclaseA = in_array('A', array_column($rows, 'clase'), true);
 
     if ($hayclaseA) {
-        echo "<table><tr><th>CLASE A</th></tr>";
+        echo "CLASE A";
+        echo "<table><tr><th>Marca</th></tr>";
         foreach ($rows as $row) {
             if ($row['clase'] === 'A' ) {
                 echo "<tr>";
@@ -34,6 +44,15 @@ try {
                 echo "<td>" . htmlspecialchars($row['modelo']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['motorizacion']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['transmicion']) . "</td>";
+                if($dias > 4 && $dias <= 9){
+                    $descuentoPorDiasExtras = ($row['precio']) - $row['precio'] * 0.05;
+                    echo "<td>" . $descuentoPorDiasExtras . "</td>";
+                }elseif($dias > 9){
+                    $descuentoPorDiasExtras = ($row['precio']) - $row['precio'] * 0.10;
+                    echo "<td>" . $descuentoPorDiasExtras . "</td>";
+                }else{
+                    echo "<td>" . $row['precio'] . "</td>";
+                }
                 echo "</tr>";
             }
         }
@@ -55,6 +74,15 @@ try {
                 echo "<td>" . htmlspecialchars($row['modelo']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['motorizacion']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['transmicion']) . "</td>";
+                if($dias > 4 && $dias <= 9){
+                    $descuentoPorDiasExtras = ($row['precio']) - $row['precio'] * 0.05;
+                    echo "<td>" . $descuentoPorDiasExtras . "</td>";
+                }elseif($dias > 9){
+                    $descuentoPorDiasExtras = ($row['precio']) - $row['precio'] * 0.10;
+                    echo "<td>" . $descuentoPorDiasExtras . "</td>";
+                }else{
+                    echo "<td>" . $row['precio'] . "</td>";
+                }
                 echo "</tr>";
             }
         }
@@ -72,6 +100,15 @@ try {
                 echo "<td>" . htmlspecialchars($row['modelo']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['motorizacion']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['transmicion']) . "</td>";
+                if($dias > 4 && $dias <= 9){
+                    $descuentoPorDiasExtras = ($row['precio']) - $row['precio'] * 0.05;
+                    echo "<td>" . $descuentoPorDiasExtras . "</td>";
+                }elseif($dias > 9){
+                    $descuentoPorDiasExtras = ($row['precio']) - $row['precio'] * 0.10;
+                    echo "<td>" . $descuentoPorDiasExtras . "</td>";
+                }else{
+                    echo "<td>" . $row['precio'] . "</td>";
+                }
                 echo "</tr>";
             }
         }
@@ -84,6 +121,7 @@ try {
 }
 
 ?>
-        <a href="cerrarSesion.php">Cerrar Sesión</a>
+        <a href="../cerrarSesion.php">Cerrar Sesión</a>
+        <a href="principal.php">Inicio</a>
     </body>
 </DOCTYPE>

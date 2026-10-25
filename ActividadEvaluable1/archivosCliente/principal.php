@@ -12,6 +12,7 @@ session_start();
         <form action="panel.php" method="POST">
             Fecha recogida: <input type="date" name="fechaRecogida">
             Fecha devolucion: <input type="date" name="fechaDevolucion">
+            <button type="submit">Buscar vehiculos</button>
         </form>
     </body>
 </html>

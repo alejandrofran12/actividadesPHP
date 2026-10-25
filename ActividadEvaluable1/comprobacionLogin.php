@@ -30,7 +30,7 @@ try{
     }elseif($contra === $usuarioAdmin['contrasena']){
         $_SESSION['nombre'] = $usuarioAdmin['nombre'];
         $_SESSION['dniAdmin'] = $usuarioAdmin['dni'];
-        header('Location: panelAdmin.php');
+        header('Location: archivosAdministrador/panelAdmin.php');
     }else{
         $_SESSION['errores'] = "Credenciales incorrectas";
         header('Location: login.php');
