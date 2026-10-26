@@ -13,15 +13,21 @@ $fechaDevolucion = $_POST['fechaDevolucion'];
 ?>
 <DOCTYPE html>
     <body>
+        <head>
+            <link rel="stylesheet" href="../css/estilo.css">
+        </head>
         <h1>Coches disponibles para esa fecha</h1>
 <?php
+
 try {
-    $sql = "SELECT DISTINCT marca, modelo, motorizacion, transmicion, clase, precio FROM vehiculos v WHERE NOT EXISTS 
+    $sql = "SELECT DISTINCT matricula, marca, modelo, motorizacion, transmicion, clase, precio FROM vehiculos v WHERE NOT EXISTS 
     (SELECT 1 FROM cierrevehiculo c WHERE c.matricula_id = v.matricula AND 
-    (c.fechaCierre BETWEEN ? AND ? OR c.fechaApertura BETWEEN ? AND ?));";
+    (c.fechaCierre BETWEEN ? AND ? OR c.fechaApertura BETWEEN ? AND ? OR(fechaCierre > ? AND fechaApertura < ?)));";
+    /*$sql = "SELECT DISTINCT marca, modelo, motorizacion, transmicion, clase, precio FROM vehiculos v WHERE NOT EXISTS 
+    (SELECT 1 FROM cierrevehiculo c WHERE c.matricula_id = v.matricula AND fechaCierre > ? AND fechaApertura < ?)";*/
 
     $result = $conn->prepare($sql);
-    $result->execute([$fechaRecogida, $fechaDevolucion, $fechaRecogida, $fechaDevolucion]);
+    $result->execute([$fechaRecogida, $fechaDevolucion, $fechaRecogida, $fechaDevolucion, $fechaRecogida, $fechaDevolucion]);
     $rows = $result->fetchAll();
 
     //comprobar descuento al cliente
@@ -36,7 +42,14 @@ try {
 
     if ($hayclaseA) {
         echo "CLASE A";
-        echo "<table><tr><th>Marca</th></tr>";
+        echo "<table>
+                <tr>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Motorización</th>
+                    <th>Transmición</th>
+                    <th>Precio</th>
+                </tr>";
         foreach ($rows as $row) {
             if ($row['clase'] === 'A' ) {
                 echo "<tr>";
@@ -52,11 +65,25 @@ try {
                     echo "<td>" . $descuentoPorDiasExtras . "</td>";
                 }else{
                     echo "<td>" . $row['precio'] . "</td>";
+                    $descuentoPorDiasExtras = null;
                 }
-                echo "</tr>";
+                echo "<td>
+                    <form action='reservaVehiculo.php' method='POST'>
+                    <input type='hidden' name='matricula' value='" . htmlspecialchars($row['matricula']) . "'>
+                    <input type='hidden' name='fechaRecogida' value='" . htmlspecialchars($fechaRecogida) . "'>
+                    <input type='hidden' name='fechaDevolucion' value='" . htmlspecialchars($fechaDevolucion) . "'>
+                    <input type='hidden' name='precioOriginal' value='" . $row['precio'] . "'>
+                    <input type='hidden' name='descuentoPorDiasExtras' value='" . $descuentoPorDiasExtras . "'>
+                    <button type='submit'>Reservar</button>
+                </form>
+                </td>";
+                
+                
+                
             }
         }
     echo "</table>";
+    echo "<br>";
     }
 
     ?>
@@ -66,7 +93,15 @@ try {
     $hayclaseB = in_array('B', array_column($rows, 'clase'), true);
     
     if ($hayclaseB) {
-        echo "<table><tr><th>CLASE B</th></tr>";
+        echo "CLASE B";
+        echo "<table>
+                <tr>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Motorización</th>
+                    <th>Transmición</th>
+                    <th>Precio</th>
+                </tr>";
         foreach ($rows as $row) {
             if ($row['clase'] === 'B') {
                 echo "<tr>";
@@ -83,16 +118,26 @@ try {
                 }else{
                     echo "<td>" . $row['precio'] . "</td>";
                 }
+                echo "<td><form><button type='submit'>Reservar</button></form></td>";
                 echo "</tr>";
             }
         }
     echo "</table>";
+    echo "<br>";
     }
 
     $hayclaseC = in_array('B', array_column($rows, 'clase'), true);
     
     if ($hayclaseC) {
-        echo "<table><tr><th>CLASE C</th></tr>";
+        echo "CLASE C";
+        echo "<table>
+                <tr>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Motorización</th>
+                    <th>Transmición</th>
+                    <th>Precio</th>
+                </tr>";
         foreach ($rows as $row) {
             if ($row['clase'] === 'C') {
                 echo "<tr>";
@@ -109,6 +154,7 @@ try {
                 }else{
                     echo "<td>" . $row['precio'] . "</td>";
                 }
+                echo "<td><form><button type='submit'>Reservar</button></form></td>";
                 echo "</tr>";
             }
         }
@@ -123,5 +169,6 @@ try {
 ?>
         <a href="../cerrarSesion.php">Cerrar Sesión</a>
         <a href="principal.php">Inicio</a>
+        
     </body>
 </DOCTYPE>

@@ -13,6 +13,7 @@ session_start();
             Fecha recogida: <input type="date" name="fechaRecogida">
             Fecha devolucion: <input type="date" name="fechaDevolucion">
             <button type="submit">Buscar vehiculos</button>
+            <a href="../cerrarSesion.php">Cerrar sesión</a>
         </form>
     </body>
 </html>
