@@ -20,14 +20,20 @@ $fechaDevolucion = $_POST['fechaDevolucion'];
 <?php
 
 try {
-    $sql = "SELECT DISTINCT matricula, marca, modelo, motorizacion, transmicion, clase, precio FROM vehiculos v WHERE NOT EXISTS 
+    $sql = "SELECT matricula, marca, modelo, motorizacion, transmicion, clase, precio FROM vehiculos v WHERE NOT EXISTS 
     (SELECT 1 FROM cierrevehiculo c WHERE c.matricula_id = v.matricula AND 
-    (c.fechaCierre BETWEEN ? AND ? OR c.fechaApertura BETWEEN ? AND ? OR(fechaCierre > ? AND fechaApertura < ?)));";
-    /*$sql = "SELECT DISTINCT marca, modelo, motorizacion, transmicion, clase, precio FROM vehiculos v WHERE NOT EXISTS 
-    (SELECT 1 FROM cierrevehiculo c WHERE c.matricula_id = v.matricula AND fechaCierre > ? AND fechaApertura < ?)";*/
+    (? BETWEEN c.fechaCierre AND c.fechaApertura OR ? BETWEEN c.fechaCierre AND c.fechaApertura OR (fechaCierre > ? AND fechaApertura < ?)))
+
+    AND NOT EXISTS (SELECT 1 FROM reservas r WHERE r.matricula_coche = v.matricula AND 
+    (? BETWEEN fecha_reserva AND fecha_devolucion OR ? BETWEEN fecha_reserva AND fecha_devolucion OR
+    (fecha_reserva > ? AND fecha_devolucion < ?))) GROUP BY marca, modelo, motorizacion, transmicion, clase, precio ORDER BY precio;";
+    
 
     $result = $conn->prepare($sql);
-    $result->execute([$fechaRecogida, $fechaDevolucion, $fechaRecogida, $fechaDevolucion, $fechaRecogida, $fechaDevolucion]);
+    $result->execute([
+    $fechaRecogida, $fechaDevolucion, $fechaRecogida, $fechaDevolucion, 
+    $fechaRecogida, $fechaDevolucion, $fechaRecogida, $fechaDevolucion   
+    ]);
     $rows = $result->fetchAll();
 
     //comprobar descuento al cliente
@@ -65,7 +71,7 @@ try {
                     echo "<td>" . $descuentoPorDiasExtras . "</td>";
                 }else{
                     echo "<td>" . $row['precio'] . "</td>";
-                    $descuentoPorDiasExtras = null;
+                    $descuentoPorDiasExtras = '';
                 }
                 echo "<td>
                     <form action='reservaVehiculo.php' method='POST'>
@@ -75,11 +81,9 @@ try {
                     <input type='hidden' name='precioOriginal' value='" . $row['precio'] . "'>
                     <input type='hidden' name='descuentoPorDiasExtras' value='" . $descuentoPorDiasExtras . "'>
                     <button type='submit'>Reservar</button>
-                </form>
+                    </form>
                 </td>";
-                
-                
-                
+                echo "</tr>";
             }
         }
     echo "</table>";
@@ -118,7 +122,16 @@ try {
                 }else{
                     echo "<td>" . $row['precio'] . "</td>";
                 }
-                echo "<td><form><button type='submit'>Reservar</button></form></td>";
+                echo "<td>
+                    <form action='reservaVehiculo.php' method='POST'>
+                    <input type='hidden' name='matricula' value='" . htmlspecialchars($row['matricula']) . "'>
+                    <input type='hidden' name='fechaRecogida' value='" . htmlspecialchars($fechaRecogida) . "'>
+                    <input type='hidden' name='fechaDevolucion' value='" . htmlspecialchars($fechaDevolucion) . "'>
+                    <input type='hidden' name='precioOriginal' value='" . $row['precio'] . "'>
+                    <input type='hidden' name='descuentoPorDiasExtras' value='" . $descuentoPorDiasExtras . "'>
+                    <button type='submit'>Reservar</button>
+                    </form>
+                </td>";
                 echo "</tr>";
             }
         }
@@ -126,7 +139,7 @@ try {
     echo "<br>";
     }
 
-    $hayclaseC = in_array('B', array_column($rows, 'clase'), true);
+    $hayclaseC = in_array('C', array_column($rows, 'clase'), true);
     
     if ($hayclaseC) {
         echo "CLASE C";
@@ -154,7 +167,16 @@ try {
                 }else{
                     echo "<td>" . $row['precio'] . "</td>";
                 }
-                echo "<td><form><button type='submit'>Reservar</button></form></td>";
+                echo "<td>
+                    <form action='reservaVehiculo.php' method='POST'>
+                    <input type='hidden' name='matricula' value='" . htmlspecialchars($row['matricula']) . "'>
+                    <input type='hidden' name='fechaRecogida' value='" . htmlspecialchars($fechaRecogida) . "'>
+                    <input type='hidden' name='fechaDevolucion' value='" . htmlspecialchars($fechaDevolucion) . "'>
+                    <input type='hidden' name='precioOriginal' value='" . $row['precio'] . "'>
+                    <input type='hidden' name='descuentoPorDiasExtras' value='" . $descuentoPorDiasExtras . "'>
+                    <button type='submit'>Reservar</button>
+                    </form>
+                </td>";
                 echo "</tr>";
             }
         }
