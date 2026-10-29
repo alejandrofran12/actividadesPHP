@@ -48,7 +48,7 @@ try {
 
     if ($hayclaseA) {
         echo "CLASE A";
-        echo "<table>
+        echo "<table cellpadding= '8'>
                 <tr>
                     <th>Marca</th>
                     <th>Modelo</th>
@@ -98,7 +98,7 @@ try {
     
     if ($hayclaseB) {
         echo "CLASE B";
-        echo "<table>
+        echo "<table cellpadding= '8'>
                 <tr>
                     <th>Marca</th>
                     <th>Modelo</th>
@@ -143,7 +143,7 @@ try {
     
     if ($hayclaseC) {
         echo "CLASE C";
-        echo "<table>
+        echo "<table cellpadding= '8'>
                 <tr>
                     <th>Marca</th>
                     <th>Modelo</th>

@@ -13,7 +13,7 @@ $dni = $_POST['dni'];
 $fecha = $_POST['fecha_nacimiento'];
 $contrasena = hashearContraseña();
 
-$ruta = "permisos/";
+$ruta = "../permisos/";
 $rutaYarchivo = $ruta . basename($_FILES['archivoUsuario']['name']);
 //$extension = strtolower(pathinfo($_FILES['archivoUsuario']["name"], PATHINFO_EXTENSION));
 fotoDNI($rutaYarchivo);
@@ -34,6 +34,7 @@ if(empty($nombre ) && empty($apellidos) && empty($dni) && empty($fecha) && empty
         $sql = "INSERT INTO clientes (dni, nombre, apellidos, contrasena, fecha_nacimiento, foto_dni) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->execute([$dni, $nombre, $apellidos, $contrasena, $fecha, $archivo]);
+        header('Location: ../login.php');
     } catch(PDOException $e) {
         echo "Error: " . $e->getMessage();
     }

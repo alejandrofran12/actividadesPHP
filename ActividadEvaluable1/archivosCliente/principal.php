@@ -15,6 +15,6 @@ session_start();
             <button type="submit">Buscar vehiculos</button>
         </form>
         <button><a href="../cerrarSesion.php">Cerrar sesión</a></button>
-         <button><a href="../reservasCliente.php">Mis reservas</a></button>
+        <button><a href="reservasCliente.php">Mis reservas</a></button>
     </body>
 </html>
