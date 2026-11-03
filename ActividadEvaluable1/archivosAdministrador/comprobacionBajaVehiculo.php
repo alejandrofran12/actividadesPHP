@@ -27,6 +27,8 @@ if($fechaAlta < $fechaBaja){
         'destino' => 'comprobacionBajaVehiculo.php',
         'mensaje' => 'fecha menor a la fecha de baja',
     ];
+    header('Location: panelAdmin.php');
+    exit;
 }
 
 try{

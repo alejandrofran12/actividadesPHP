@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 include 'conexion.php';
 
 if($_SERVER['REQUEST_METHOD'] != 'POST'){
@@ -11,7 +11,24 @@ $matricula = $_POST['matricula'];
 $fechaBaja = $_POST['fechaBaja'];
 $fechaAlta = $_POST['fechaAlta'];
 
-var_dump($matricula);
+if($fechaBaja < date('Y-m-d')){
+    $_SESSION['errores'] = [
+        'destino' => 'modificarCierre.php',
+        'mensaje' => 'fecha menor a la actual',
+    ];
+    header('Location: panelAdmin.php');
+    exit;
+}
+
+if($fechaAlta < $fechaBaja){
+    $_SESSION['errores'] = [
+        'destino' => 'modificarCierre.php',
+        'mensaje' => 'fecha menor a la fecha de baja',
+    ];
+    header('Location: panelAdmin.php');
+    exit;
+}
+
 try{
     $sql = "UPDATE cierreVehiculo set fechaCierre = ?, fechaApertura = ? WHERE matricula_id = ?;";
     $resultado = $conn->prepare($sql);

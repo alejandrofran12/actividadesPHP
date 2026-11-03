@@ -6,6 +6,7 @@ if(!isset($_SESSION['dniAdmin'])){
     header('location: login.php');
     exit;
 }
+
 $sql = "SELECT matricula, marca, modelo, motorizacion, transmicion, clase, precio FROM vehiculos";
 $result = $conn->prepare($sql);
 $result->execute();
@@ -209,7 +210,6 @@ $rows = $result->fetchAll();
                 if($_SESSION['errores'] != NULL && $_SESSION['errores']['destino'] === 'comprobacionBajaVehiculo.php'){
                 echo "<p style='color: red;'>" . $_SESSION['errores']['mensaje'] . "</p>";
                 }
-                $_SESSION['errores'] = null;
             ?>
 
 <!-- ///////////////////////////////////////////////////////////////////////////// -->
@@ -225,7 +225,7 @@ $rows = $result->fetchAll();
                     <?php
                         echo "<option value=''>-- Selecciona --</option>";
                         while($row = $resultado2->fetch()){
-                            echo "<option value = " . $row['matricula_id'] . ">" . $row['matricula_id'] . ", ".  $row['marca'] . ", " . $row['modelo'] . "</option>";
+                            echo "<option value = '" . $row['matricula_id'] . "'>" . $row['matricula_id'] . ", ".  $row['marca'] . ", " . $row['modelo'] . "</option>";
                         }
                     ?>
                 </select>
@@ -235,6 +235,14 @@ $rows = $result->fetchAll();
                 <button type="submit">Modificar</button>
             </form>
 
+            <?php 
+
+            if($_SESSION['errores'] != NULL && $_SESSION['errores']['destino'] === 'modificarCierre.php'){
+                echo "<p style='color: red;'>" . $_SESSION['errores']['mensaje'] . "</p>";
+            }
+            $_SESSION['errores'] = null;
+            ?>
+            
             <a href="../cerrarSesion.php">Cerrar sesion</a>
         </body>
 </html>
