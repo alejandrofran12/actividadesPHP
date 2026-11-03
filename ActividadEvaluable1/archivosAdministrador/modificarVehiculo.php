@@ -2,7 +2,6 @@
 
 include 'conexion.php';
 
-
 try{
      $sql = "UPDATE vehiculos
             SET marca = COALESCE(NULLIF(?, ''), marca),
@@ -15,20 +14,12 @@ try{
             clase = COALESCE(NULLIF(?, ''), clase),
             precio = COALESCE(NULLIF(?, ''), precio)
             WHERE matricula = ?";
-            
+
     $stmt = $conn->prepare($sql);
-    $stmt->execute([
-        $_POST['marca'],
-        $_POST['modelo'],
-        $_POST['color'],
-        $_POST['puertas'],
-        $_POST['asientos'],
-        $_POST['transmicion'],
-        $_POST['motorizacion'],
-        $_POST['clase'],
-        $_POST['precio'],
-        $_POST['matricula']
+    $stmt->execute([$_POST['marca'], $_POST['modelo'], $_POST['color'], $_POST['puertas'], $_POST['asientos'],
+        $_POST['transmicion'], $_POST['motorizacion'], $_POST['clase'], $_POST['precio'], $_POST['matricula']
     ]);
+
     header("Location: panelAdmin.php");
     exit;
 }catch(PDOException $e){

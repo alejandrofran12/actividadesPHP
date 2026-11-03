@@ -186,9 +186,10 @@ $rows = $result->fetchAll();
             </form>
 
 <!-- ///////////////////////////////////////////////////////////////////////////// -->
-
+            
             <?php
-                $sql="SELECT matricula_id FROM cierrevehiculo";
+                $sql="SELECT c.matricula_id, v.marca, v.modelo FROM cierrevehiculo c 
+                INNER JOIN vehiculos v ON c.matricula_id = v.matricula";
                 $resultado2 = $conn->query($sql);
             ?>
 
@@ -197,7 +198,7 @@ $rows = $result->fetchAll();
                     <?php
                         echo "<option value=''>-- Selecciona --</option>";
                         while($row = $resultado2->fetch()){
-                            echo "<option value = " . $row['matricula_id'] . ">" . $row['matricula_id'] . "</option>";
+                            echo "<option value = " . $row['matricula'] . ">" . $row['matricula_id'] . ", ".  $row['marca'] . ", " . $row['modelo'] . "</option>";
                         }
                     ?>
                 </select>
@@ -210,6 +211,30 @@ $rows = $result->fetchAll();
                 }
                 $_SESSION['errores'] = null;
             ?>
-            <button><a href="..cerrarSesion.php">Cerrar sesion</button>
+
+<!-- ///////////////////////////////////////////////////////////////////////////// -->
+
+            <?php
+                $sql="SELECT c.matricula_id, v.marca, v.modelo FROM cierrevehiculo c 
+                INNER JOIN vehiculos v ON c.matricula_id = v.matricula";
+                $resultado2 = $conn->query($sql);
+            ?>
+            <h2>MODIFICAR CIERRE</h2>
+            <form action="modificarCierre.php" method="POST">
+                <select name="matricula">
+                    <?php
+                        echo "<option value=''>-- Selecciona --</option>";
+                        while($row = $resultado2->fetch()){
+                            echo "<option value = " . $row['matricula_id'] . ">" . $row['matricula_id'] . ", ".  $row['marca'] . ", " . $row['modelo'] . "</option>";
+                        }
+                    ?>
+                </select>
+                Fecha baja: <input type="date" name="fechaBaja">
+                Fecha alta: <input type="date" name="fechaAlta">
+
+                <button type="submit">Modificar</button>
+            </form>
+
+            <a href="../cerrarSesion.php">Cerrar sesion</a>
         </body>
 </html>
