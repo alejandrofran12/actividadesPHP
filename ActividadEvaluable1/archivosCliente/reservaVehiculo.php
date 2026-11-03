@@ -10,8 +10,8 @@ $descuentoPorDiasExtras = $_POST['descuentoPorDiasExtras'];
 $id_Cliente = $_SESSION['dni'];
 
 try {
-    $sql = "INSERT INTO reservas (matricula_coche, fecha_reserva, fecha_devolucion, precio_real, precio_descuento, id_cliente)
-            VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO reservas (matricula_coche, fecha_reserva, fecha_devolucion, precio_real, precio_descuento, id_cliente, cancelada)
+            VALUES (?, ?, ?, ?, ?, ?, 0)";
 
     $stmt = $conn->prepare($sql);
     $stmt->execute([

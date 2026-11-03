@@ -6,7 +6,7 @@ $sql = "SELECT v.marca, v.modelo, v.color, v.puertas, v.asientos, v.transmicion,
         r.fecha_reserva, r.fecha_devolucion, r.precio_real, r.precio_descuento, r.matricula_coche
         FROM vehiculos AS v
         INNER JOIN reservas AS r
-        on v.matricula = r.matricula_coche Where r.id_cliente = ?;";
+        on v.matricula = r.matricula_coche Where r.id_cliente = ? AND r.cancelada != 1;";
 
 $resultado = $conn->prepare($sql);
 $resultado->execute([$_SESSION['dni']]);
@@ -49,8 +49,8 @@ $filas = $resultado->fetchAll();
                         echo "<td>" . $row['precio_real'] . "</td>";
                         echo "<td>" . $row['precio_descuento'] . "</td>";
                         echo "<td>
-                                    <form action='cancelarReserva' method='POST'>
-                                        <input name='matricula' value='" . $row['matricula_id'] . "'>
+                                    <form action='cancelarReserva.php' method='POST'>
+                                        <button name='matricula' value='" . $row['matricula_coche'] . "'>cancelar</button>
                                     </form>
                               </td>";
                         echo "</tr>";
