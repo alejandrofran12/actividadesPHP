@@ -56,6 +56,8 @@ $filas = $resultado->fetchAll();
                         echo "<td>
                                     <form action='cancelarReserva.php' method='POST'>
                                         <button name='matricula' value='" . $row['matricula_coche'] . "'>cancelar</button>
+                                        <input type='hidden' name='fecha_reserva' value='". $row['fecha_reserva'] ."'>
+                                        <input type='hidden' name='fecha_devolucion' value='". $row['fecha_devolucion'] ."'>
                                     </form>
                               </td>";
                         echo "</tr>";

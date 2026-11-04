@@ -3,7 +3,7 @@ session_start();
 include("conexion.php");
 
 if(!isset($_SESSION['dni'])){
-    header('location: login.php');
+    header('location: ../login.php');
     exit;
 }
 
@@ -24,7 +24,7 @@ try {
     (SELECT 1 FROM cierrevehiculo c WHERE c.matricula_id = v.matricula AND 
     (? BETWEEN c.fechaCierre AND c.fechaApertura OR ? BETWEEN c.fechaCierre AND c.fechaApertura OR (fechaCierre > ? AND fechaApertura < ?)))
 
-    AND NOT EXISTS (SELECT 1 FROM reservas r WHERE r.matricula_coche = v.matricula AND r.cancelada = 0 AND
+    AND NOT EXISTS (SELECT 1 FROM reservas r WHERE r.matricula_coche = v.matricula AND r.cancelada = 0 AND 
     (? BETWEEN fecha_reserva AND fecha_devolucion OR ? BETWEEN fecha_reserva AND fecha_devolucion OR
     (fecha_reserva > ? AND fecha_devolucion < ?))) GROUP BY marca, modelo, motorizacion, transmicion, clase, precio ORDER BY precio;";
     
@@ -201,6 +201,8 @@ try {
             if($_SESSION['errores'] != NULL && $_SESSION['errores']['destino'] === 'reservaVehiculo.php'){
                 echo "<p style='color: red;'>" . $_SESSION['errores']['mensaje'] . "</p>";
             }
+
+            $_SESSION['errores'] = null;
         ?>
     </body>
 </DOCTYPE>

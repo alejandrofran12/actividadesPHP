@@ -6,17 +6,15 @@ $matricula = $_POST['matricula'];
 
 try{
     $sql = "UPDATE reservas 
-    SET cancelada = 1; 
-    WHERE matricula_coche = $matricula";
+    SET cancelada = 1 
+    WHERE matricula_coche = '".$matricula."'" 
+    . "AND fecha_reserva = '". $_POST['fecha_reserva']. "'"
+    . "AND fecha_devolucion = '" . $_POST['fecha_devolucion'] . "';";
 
     $conn->query($sql);
     header('Location: reservasCliente.php');
-    
+    exit;
 }catch(PDOException $e){
-    $e->getMessage();
+    echo $e->getMessage();
 }
 
-/*ALTER TABLE reservas
-ADD CONSTRAINT fk_reservas_vehiculos
-FOREIGN KEY (matricula) REFERENCES vehiculos(matricula)
-ON DELETE CASCADE; CAMBIAR CAMPO DE BOOLEAN EN RESERVAS*/ 

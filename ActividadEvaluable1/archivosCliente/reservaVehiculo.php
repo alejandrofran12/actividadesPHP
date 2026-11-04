@@ -10,9 +10,12 @@ $precio = $_POST['precioOriginal'];
 $descuentoPorDiasExtras = $_POST['descuentoPorDiasExtras'];
 $id_Cliente = $_SESSION['dni'];
 
-$sqlComprobacionDisponibilidad = "SELECT matricula_coche FROM reservas WHERE matricula_coche = ?;";
+$sqlComprobacionDisponibilidad = "SELECT matricula_coche FROM reservas WHERE matricula_coche = ? AND 
+    (? BETWEEN fecha_reserva AND fecha_devolucion OR ? BETWEEN fecha_reserva AND fecha_devolucion OR
+    (fecha_reserva > ? AND fecha_devolucion < ?));";
+
 $sentencia = $conn->prepare($sqlComprobacionDisponibilidad);
-$sentencia->execute([$matricula]);
+$sentencia->execute([$matricula, $fechaRecogida, $fecha_devolucion, $fechaRecogida, $fecha_devolucion]);
 $resultado = $sentencia->fetchAll();
 
 if(!empty($resultado)){
