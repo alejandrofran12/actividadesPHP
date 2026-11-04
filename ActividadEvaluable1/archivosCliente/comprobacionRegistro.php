@@ -15,7 +15,6 @@ $contrasena = hashearContraseña();
 
 $ruta = "../permisos/";
 $rutaYarchivo = $ruta . basename($_FILES['archivoUsuario']['name']);
-//$extension = strtolower(pathinfo($_FILES['archivoUsuario']["name"], PATHINFO_EXTENSION));
 fotoDNI($rutaYarchivo);
 $archivo = $ruta . $_FILES['archivoUsuario']['name']; 
 

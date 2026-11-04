@@ -15,3 +15,8 @@ try{
 }catch(PDOException $e){
     $e->getMessage();
 }
+
+/*ALTER TABLE reservas
+ADD CONSTRAINT fk_reservas_vehiculos
+FOREIGN KEY (matricula) REFERENCES vehiculos(matricula)
+ON DELETE CASCADE; CAMBIAR CAMPO DE BOOLEAN EN RESERVAS*/ 

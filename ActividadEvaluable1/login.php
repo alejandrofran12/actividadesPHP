@@ -6,7 +6,7 @@ include("conexion.php");
 <DOCTYPE html>
 <html>
     <head>
-        
+        <link rel="stylesheet" href="css/estilo.css">
     </head>
     <body>
         <div>
@@ -25,7 +25,9 @@ include("conexion.php");
             }
 
             $_SESSION['errores'] = null;
-            ?> 
+            ?>
+            
+            <a href="archivosCliente/registro.php">Registrarse</a>
         </div> 
     </body>   
 </html>    

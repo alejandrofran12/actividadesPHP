@@ -2,6 +2,11 @@
 session_start();
 include("conexion.php");
 
+if(!isset($_SESSION['dni'])){
+    header('location: login.php');
+    exit;
+}
+
 $sql = "SELECT v.marca, v.modelo, v.color, v.puertas, v.asientos, v.transmicion, v.motorizacion, v.clase, 
         r.fecha_reserva, r.fecha_devolucion, r.precio_real, r.precio_descuento, r.matricula_coche
         FROM vehiculos AS v
@@ -31,7 +36,7 @@ $filas = $resultado->fetchAll();
                     echo "<th>Motorizacion</th>";
                     echo "<th>Fecha de Reserva</th>";
                     echo "<th>Fecha de devolucion</th>";
-                    echo "<th>Modelo</th>";
+                    echo "<th>Precio real</th>";
                     echo "<th>Descuento</th>";
                     echo "<th>Cancelar</th>";
                     echo "</tr>";

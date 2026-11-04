@@ -1,11 +1,18 @@
 <?php
 session_start();
 include("conexion.php");
+
+if(!isset($_SESSION['dni'])){
+    header('location: ../login.php');
+    exit;
+}
 ?>
 
 <DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" href="../css/estilo.css">
+    </head>
         <body>
             <h1>Registro</h1>
             <form action="comprobacionRegistro.php" method="POST" enctype="multipart/form-data">
@@ -29,6 +36,5 @@ include("conexion.php");
             $_SESSION['errores'] = null;
             ?>
         </body>
-    </head>
 </html>
         

@@ -1,5 +1,10 @@
 <?php
 session_start();
+
+if(!isset($_SESSION['dni'])){
+    header('location: login.php');
+    exit;
+}
 ?>
 
 <!DOCTYPE html>

@@ -7,8 +7,8 @@ if(!isset($_SESSION['dni'])){
     exit;
 }
 
-$fechaRecogida = $_POST['fechaRecogida'];
-$fechaDevolucion = $_POST['fechaDevolucion'];
+$fechaRecogida = $_POST['fechaRecogida']  ?? $_SESSION['fechaRecogida']  ?? null;
+$fechaDevolucion = $_POST['fechaDevolucion'] ?? $_SESSION['fechaDevolucion'] ?? null;
 
 ?>
 <DOCTYPE html>
@@ -24,7 +24,7 @@ try {
     (SELECT 1 FROM cierrevehiculo c WHERE c.matricula_id = v.matricula AND 
     (? BETWEEN c.fechaCierre AND c.fechaApertura OR ? BETWEEN c.fechaCierre AND c.fechaApertura OR (fechaCierre > ? AND fechaApertura < ?)))
 
-    AND NOT EXISTS (SELECT 1 FROM reservas r WHERE r.matricula_coche = v.matricula AND 
+    AND NOT EXISTS (SELECT 1 FROM reservas r WHERE r.matricula_coche = v.matricula AND r.cancelada = 0 AND
     (? BETWEEN fecha_reserva AND fecha_devolucion OR ? BETWEEN fecha_reserva AND fecha_devolucion OR
     (fecha_reserva > ? AND fecha_devolucion < ?))) GROUP BY marca, modelo, motorizacion, transmicion, clase, precio ORDER BY precio;";
     
@@ -114,13 +114,14 @@ try {
                 echo "<td>" . htmlspecialchars($row['motorizacion']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['transmicion']) . "</td>";
                 if($dias > 4 && $dias <= 9){
-                    $descuentoPorDiasExtras = ($row['precio']) - $row['precio'] * 0.05;
-                    echo "<td>" . $descuentoPorDiasExtras . "</td>";
+                    $descuentoPorDiasExtrasB = ($row['precio']) - $row['precio'] * 0.05;
+                    echo "<td>" . $descuentoPorDiasExtrasB . "</td>";
                 }elseif($dias > 9){
-                    $descuentoPorDiasExtras = ($row['precio']) - $row['precio'] * 0.10;
-                    echo "<td>" . $descuentoPorDiasExtras . "</td>";
+                    $descuentoPorDiasExtrasB = ($row['precio']) - $row['precio'] * 0.10;
+                    echo "<td>" . $descuentoPorDiasExtrasB . "</td>";
                 }else{
                     echo "<td>" . $row['precio'] . "</td>";
+                    $descuentoPorDiasExtrasB = '';
                 }
                 echo "<td>
                     <form action='reservaVehiculo.php' method='POST'>
@@ -128,7 +129,7 @@ try {
                     <input type='hidden' name='fechaRecogida' value='" . htmlspecialchars($fechaRecogida) . "'>
                     <input type='hidden' name='fechaDevolucion' value='" . htmlspecialchars($fechaDevolucion) . "'>
                     <input type='hidden' name='precioOriginal' value='" . $row['precio'] . "'>
-                    <input type='hidden' name='descuentoPorDiasExtras' value='" . $descuentoPorDiasExtras . "'>
+                    <input type='hidden' name='descuentoPorDiasExtras' value='" . $descuentoPorDiasExtrasB . "'>
                     <button type='submit'>Reservar</button>
                     </form>
                 </td>";
@@ -159,13 +160,14 @@ try {
                 echo "<td>" . htmlspecialchars($row['motorizacion']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['transmicion']) . "</td>";
                 if($dias > 4 && $dias <= 9){
-                    $descuentoPorDiasExtras = ($row['precio']) - $row['precio'] * 0.05;
-                    echo "<td>" . $descuentoPorDiasExtras . "</td>";
+                    $descuentoPorDiasExtrasC = ($row['precio']) - $row['precio'] * 0.05;
+                    echo "<td>" . $descuentoPorDiasExtrasC . "</td>";
                 }elseif($dias > 9){
-                    $descuentoPorDiasExtras = ($row['precio']) - $row['precio'] * 0.10;
-                    echo "<td>" . $descuentoPorDiasExtras . "</td>";
+                    $descuentoPorDiasExtrasC = ($row['precio']) - $row['precio'] * 0.10;
+                    echo "<td>" . $descuentoPorDiasExtrasC . "</td>";
                 }else{
                     echo "<td>" . $row['precio'] . "</td>";
+                    $descuentoPorDiasExtrasC = '';
                 }
                 echo "<td>
                     <form action='reservaVehiculo.php' method='POST'>
@@ -173,7 +175,7 @@ try {
                     <input type='hidden' name='fechaRecogida' value='" . htmlspecialchars($fechaRecogida) . "'>
                     <input type='hidden' name='fechaDevolucion' value='" . htmlspecialchars($fechaDevolucion) . "'>
                     <input type='hidden' name='precioOriginal' value='" . $row['precio'] . "'>
-                    <input type='hidden' name='descuentoPorDiasExtras' value='" . $descuentoPorDiasExtras . "'>
+                    <input type='hidden' name='descuentoPorDiasExtras' value='" . $descuentoPorDiasExtrasC . "'>
                     <button type='submit'>Reservar</button>
                     </form>
                 </td>";
@@ -191,6 +193,14 @@ try {
 ?>
         <a href="../cerrarSesion.php">Cerrar Sesión</a>
         <a href="principal.php">Inicio</a>
-        
+        <?php
+            if(!isset($_SESSION['errores'])){
+                $_SESSION['errores'] = null;
+            }
+            
+            if($_SESSION['errores'] != NULL && $_SESSION['errores']['destino'] === 'reservaVehiculo.php'){
+                echo "<p style='color: red;'>" . $_SESSION['errores']['mensaje'] . "</p>";
+            }
+        ?>
     </body>
 </DOCTYPE>
