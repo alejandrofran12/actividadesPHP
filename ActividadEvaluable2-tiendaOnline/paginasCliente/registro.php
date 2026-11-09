@@ -13,7 +13,7 @@ session_start();
                 <p>Nombre: <input type="text" name="nombre" required></p>
                 <p>Telefono: <input type="text" name="telefono"></p>
                 <p>Email: <input type="email" name="email" required></p>
-                <p>Usuario: <input type="date" name="usuario" required></p>
+                <p>Usuario: <input type="text" name="usuario" required></p>
                 <p>Contraseña: <input type="password" name="contrasena" required></p>
                 <button type="submit">Registrarse</button>
             </form>

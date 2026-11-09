@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>TIENDA ONLINE HARDWARE</h1>
-    <p><a href="iniciarSesion.php">Iniciar sesión</a></p>
-    <p><a href="registro.php">Registrarse</a></p>
+    <p><a href="paginasCliente/iniciarSesion.php">Iniciar sesión</a></p>
+    <p><a href="paginasCliente/registro.php">Registrarse</a></p>
 </body>
 </html>
