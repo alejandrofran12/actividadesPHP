@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../conexion/conexion.php");
+require("../conexion/conexion.php");
 
 $usuario = $_POST['usuario'];
 $contra = $_POST['contrasena'];
@@ -14,7 +14,7 @@ try{
 
     if($cliente && password_verify($contra, $cliente['contrasena'])){
         $_SESSION['nombre'] = $cliente['nombre'];
-        header('Location: ../paginasCliente/principal.php'); 
+        header('Location: ../index.php'); 
         exit;
     }else{
         $_SESSION['errores'] = "Credenciales incorrectas";

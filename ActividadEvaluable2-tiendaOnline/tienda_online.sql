@@ -62,8 +62,8 @@ INSERT INTO `categorias` (`nombre`) VALUES
 ('Cables y adaptadores'),
 ('Portátiles');
 
-//cambiar nombre por modelo con 150
-//añadir marca 100
+
+
 INSERT INTO `productos` (`modelo`, `precio`, `stock`, `categoria_id`, `marca`) VALUES
 -- Ratones (1)
 ('G502 Hero', 49.99, 35, 1, 'Logitech'),

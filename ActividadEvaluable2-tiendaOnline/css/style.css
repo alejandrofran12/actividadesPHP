@@ -1,0 +1,16 @@
+body{
+    text-align: center;
+}
+
+
+.productos{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 100px;
+}
+
+.producto{
+    border: 1px solid black;
+    padding: 20px;
+}

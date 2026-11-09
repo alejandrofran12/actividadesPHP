@@ -1,6 +1,9 @@
 <?php
-require __DIR__ . "/requires/productos.php";
+session_start();
+require "requires/productos.php";
 $productos = obtenerProductos($conn);
+
+$logueado = isset($_SESSION['nombre']);
 ?>
 
 <!DOCTYPE html>
@@ -9,26 +12,40 @@ $productos = obtenerProductos($conn);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tienda Online</title>
-    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <h1>TIENDA ONLINE HARDWARE</h1>
+    
+    <?php if ($logueado) {?>
+        <h2>Bienvenido <?php echo $_SESSION['nombre']; ?> </h2>
+        <p><a href="cerrarSesion/cerrarSesion.php">Cerrar sesion</a></p>
+    <?php } else { ?>
+        <p><a href="paginasCliente/iniciarSesion.php">Iniciar sesión</a></p>
+        <p><a href="paginasCliente/registro.php">Registrarse</a></p>
+    <?php } ?>
 
-    <table cellpadding= '8'>
-        <tr>
-            <th>Marca</th><th>Modelo</th><th>Precio</th>
-            <?php foreach($productos as $producto) {?>
-            <tr>
-                <td><?php echo $producto['marca']; ?></td>
-                <td><?php echo $producto['modelo']; ?></td>
-                <td><?php echo $producto['precio']; ?></td>
-                <td></td>
-            </tr>
-        </tr>
+    <div class="productos">
+    <?php foreach($productos as $producto) { ?>
+    <article class="producto">
+        <h2><?php echo $producto['marca']; ?> <?php echo $producto['modelo']; ?></h2>
+        <p>Precio: <?php echo $producto['precio']; ?> €</p>
+
+        <form action="paginasCliente/paginaProducto.php" method="post">
+            <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
+            <button type="submit">Ver producto</button>
+        </form>
+
+        <?php if ($logueado) {?>
+            <form action="carrito/añadirCarrito.php" method="POST">
+                <p><button>Añadir al carrito</button></p>
+            </form>
         <?php } ?>
-    </table>
 
-    <p><a href="paginasCliente/iniciarSesion.php">Iniciar sesión</a></p>
-    <p><a href="paginasCliente/registro.php">Registrarse</a></p>
+    </article>
+    
+    <?php } ?>
+    </div>
+
 </body>
 </html>
