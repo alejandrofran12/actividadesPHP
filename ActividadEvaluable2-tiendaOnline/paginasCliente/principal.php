@@ -1,6 +1,7 @@
-
 <?php 
 session_start();
+require __DIR__ . "/../requires/productos.php";
+$productos = obtenerProductos($conn);
 ?>
 
 <!DOCTYPE html>
