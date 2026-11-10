@@ -20,6 +20,7 @@ $logueado = isset($_SESSION['nombre']);
     <?php if ($logueado) {?>
         <h2>Bienvenido <?php echo $_SESSION['nombre']; ?> </h2>
         <p><a href="cerrarSesion/cerrarSesion.php">Cerrar sesion</a></p>
+        <p><a href="paginasCliente/carrito.php">Carrito</a></p>
     <?php } else { ?>
         <p><a href="paginasCliente/iniciarSesion.php">Iniciar sesión</a></p>
         <p><a href="paginasCliente/registro.php">Registrarse</a></p>
@@ -38,7 +39,10 @@ $logueado = isset($_SESSION['nombre']);
 
         <?php if ($logueado) {?>
             <form action="carrito/añadirCarrito.php" method="POST">
-                <p><button>Añadir al carrito</button></p>
+                <input type="hidden" name="id" value="<?php echo $producto['id']; ?> ">
+                <input type="hidden" name="marca" value="<?php echo $producto['marca']; ?> ">
+                <input type="hidden" name="modelo" value="<?php echo $producto['modelo']; ?> ">
+                <p><button type="submit">Añadir al carrito</button></p>
             </form>
         <?php } ?>
 

@@ -7,13 +7,14 @@ $contra = $_POST['contrasena'];
 
 try{
     //cliente
-    $sql1 = "SELECT usuario, contrasena, nombre FROM clientes WHERE usuario = ?";
+    $sql1 = "SELECT usuario, contrasena, nombre, id FROM clientes WHERE usuario = ?";
     $resultadoCliente = $conn->prepare($sql1);
     $resultadoCliente->execute([$usuario]);
     $cliente = $resultadoCliente->fetch();
 
     if($cliente && password_verify($contra, $cliente['contrasena'])){
         $_SESSION['nombre'] = $cliente['nombre'];
+        $_SESSION['id'] = $cliente['id'];
         header('Location: ../index.php'); 
         exit;
     }else{

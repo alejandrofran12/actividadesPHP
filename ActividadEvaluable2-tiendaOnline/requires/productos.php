@@ -23,6 +23,22 @@ function obtenerProducto(PDO $conn, int $id) : array{
     return $producto;
 }
 
+function obtenerProductosPrecio(PDO $conn, array $ids){
+
+    $precios = [];
+
+    foreach($ids as $id){
+        $sql = "SELECT precio FROM productos where id = ?";
+        $sentencia = $conn->prepare($sql);
+        $sentencia->execute([$id]);
+        $precio = $sentencia->fetch();
+
+        $precios[] = $precio;
+    }
+
+    return $precios;
+}
+
 //DEBERIA TRAER EL ID PARA EN ENLACE DE COMPRA, MARCA Y STOCK
 
 //PDO::FETCH_ASSOC para no duplicar columnas
