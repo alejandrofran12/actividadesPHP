@@ -1,6 +1,6 @@
 <?php
 session_start();
-require("../conexion/conexion.php");
+require "../requires/productos.php";
 
 $carrito = json_decode($_COOKIE['carrito' . $_SESSION['id']], true);
 

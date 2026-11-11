@@ -21,6 +21,7 @@ $logueado = isset($_SESSION['nombre']);
         <h2>Bienvenido <?php echo $_SESSION['nombre']; ?> </h2>
         <p><a href="cerrarSesion/cerrarSesion.php">Cerrar sesion</a></p>
         <p><a href="paginasCliente/carrito.php">Carrito</a></p>
+        <p><a href="paginasCliente/pedidos.php">Pedidos</a></p>
     <?php } else { ?>
         <p><a href="paginasCliente/iniciarSesion.php">Iniciar sesión</a></p>
         <p><a href="paginasCliente/registro.php">Registrarse</a></p>
@@ -45,7 +46,6 @@ $logueado = isset($_SESSION['nombre']);
                 <p><button type="submit">Añadir al carrito</button></p>
             </form>
         <?php } ?>
-
     </article>
     
     <?php } ?>
