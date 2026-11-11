@@ -34,10 +34,26 @@ $precios = obtenerProductosPrecio($conn, $ids);
         <p>Carrito vacío</p>
     <?php }else{ $cont = 0; foreach($carrito as $producto){ ?>
         <article class="producto">
-        <h2><?php echo $producto['marca']; ?> <?php echo $producto['modelo']; ?></h2>
-        <p>Precio: <?php echo $precios[$cont]['precio']; $total += $precios[$cont]['precio']; $cont++;?> €</p>
-    </article>
+            <h2><?php echo $producto['marca']; ?> <?php echo $producto['modelo']; ?></h2>
+            <p>Precio: <?php echo $precios[$cont]['precio']; $total += $precios[$cont]['precio'] * $producto['cantidad']; $cont++;?> €</p>
+
+            <form action="../carrito/añadirCarrito.php" method="post">
+                <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
+                <input type="hidden" name="accion" value="mas">
+                <button type="submit">+</button>
+            </form>
+
+            <form action="../carrito/añadirCarrito.php" method="post">
+                <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
+                <input type="hidden" name="accion" value="menos">
+                <button type="submit">-</button>
+            </form>
+
+            <p>Cantidad del producto: <?php echo $producto['cantidad']?></p>
+        </article>
     <?php }} ?>
     <strong><p>Total: <?php echo $total?></p></strong>
-    <button>Comprar</button>
+    <form action="../comprobacionesCliente/comprobacionPedido.php" method="POST">
+        <button type="submit" name="comprar">Comprar</button>
+    </form>
 </body>
