@@ -56,6 +56,6 @@ $precios = obtenerProductosPrecio($conn, $ids);
     <form action="../comprobacionesCliente/comprobacionPedido.php" method="POST">
         <button type="submit" name="comprar">Comprar</button>
     </form>
-    <p><?php echo $_SESSION['informacion'] ?></p>
+    <p><?php echo $_SESSION['informacion']; $_SESSION['informacion'] = null; ?></p>
     <a href="../index.php">Inicio</a>
 </body>

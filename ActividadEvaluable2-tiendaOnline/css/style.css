@@ -2,7 +2,6 @@ body{
     text-align: center;
 }
 
-
 .productos{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -13,4 +12,5 @@ body{
 .producto{
     border: 1px solid black;
     padding: 20px;
+    max-width: 30%;
 }

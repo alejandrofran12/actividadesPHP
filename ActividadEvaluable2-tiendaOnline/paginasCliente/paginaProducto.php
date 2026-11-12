@@ -16,11 +16,11 @@ $producto = obtenerProducto($conn, $id);
 <body>
     <article>
         <header>
-            <p><?= $producto['categoria'] ?></p>
+            <p> Categoria: <?= $producto['nombre'] ?></p>
             <h1><?= $producto['marca'] ?> <?= $producto['modelo'] ?></h1>
         </header>
 
-        <p><?= $producto['descripcion'] ?? 'Sin descripción disponible.' ?></p>
+        <p> <?= $producto['descripcion'] ?? 'Sin descripción disponible.' ?></p>
 
         <footer>
             <p><strong><?= number_format($producto['precio'], 2, ',', '.') ?> €</strong></p>
@@ -28,5 +28,11 @@ $producto = obtenerProducto($conn, $id);
     </article>
 
     <a href="../index.php">Volver al listado</a>
+    <form action="../carrito/añadirCarrito.php" method="POST">
+        <input type="hidden" name="id" value="<?php echo $producto['id']; ?> ">
+            <input type="hidden" name="marca" value="<?php echo $producto['marca']; ?> ">
+            <input type="hidden" name="modelo" value="<?php echo $producto['modelo']; ?> ">
+        <p><button type="submit">Añadir al carrito</button></p>
+    </form>
 </body>
 </html>

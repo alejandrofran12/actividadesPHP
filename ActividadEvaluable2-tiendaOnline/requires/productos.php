@@ -11,7 +11,7 @@ function obtenerProductos(PDO $conn) : array{
 }
 
 function obtenerProducto(PDO $conn, int $id) : array{
-    $sql = "SELECT p.marca, p.modelo, p.precio, p.descripcion, c.nombre AS categoria
+    $sql = "SELECT p.marca, p.modelo, p.precio, p.descripcion, c.nombre, p.id  
             FROM productos p
             INNER JOIN categorias c ON c.id = p.categoria_id
             WHERE p.id = :id";

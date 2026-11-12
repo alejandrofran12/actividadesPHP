@@ -6,6 +6,8 @@ $carrito = array();
 $id = $_POST['id'];
 $accion = $_POST['accion'] ?? null;
 
+//comprobar si existe el carrito
+
 if(isset($_COOKIE['carrito' . $_SESSION['id']])){
     $carrito = json_decode($_COOKIE['carrito' . $_SESSION['id']], true) ;
     if(!is_array($carrito)){
