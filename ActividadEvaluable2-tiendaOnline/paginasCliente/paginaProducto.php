@@ -1,9 +1,17 @@
 <?php 
-session_start();
 require "../requires/productos.php";
+include "../recomendaciones/recomendaciones.php";
 
 $id = $_POST['id'] ?? $_GET['id'];
 $producto = obtenerProducto($conn, $id);
+
+if(!isset($_SESSION['recomendaciones'])){
+    $_SESSION['recomendaciones'] = array();
+}
+
+$_SESSION['recomendaciones'] = $id;
+
+sistemaRecomendaciones($id);
 ?>
 
 <!DOCTYPE html>

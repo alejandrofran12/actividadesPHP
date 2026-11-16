@@ -39,7 +39,6 @@ $logueado = isset($_SESSION['nombre']);
     
         })
     </script>    
-
     <?php if ($logueado) {?>
         <h2>Bienvenido <?php echo $_SESSION['nombre']; ?> </h2>
         <p><a href="cerrarSesion/cerrarSesion.php">Cerrar sesion</a></p>
@@ -50,6 +49,34 @@ $logueado = isset($_SESSION['nombre']);
         <p><a href="paginasCliente/registro.php">Registrarse</a></p>
     <?php } ?>
 
+    <?php 
+    $sesionID = $_SESSION['id'] ?? null;
+    if(isset($_COOKIE['recomendaciones' . $sesionID])){
+        $recomendaciones = json_decode($_COOKIE['recomendaciones' . $_SESSION['id']], true);
+        $contR = 1;
+        echo "<h2>Recomendaciones</h2>";
+        echo "<div class='productos'>";
+        for($i = count($recomendaciones) - 1; $i>= 0; $i--){
+            if($contR <= 3){
+                $producto = obtenerProductoRecomendaciones($conn, $recomendaciones[$i])?>
+                <article class="producto">
+                    <h2><?php echo $producto['marca'] . " - "; ?> <?php echo $producto['modelo']; ?></h2>
+                    <p>Precio: <?php echo $producto['precio']; ?> €</p>
+                    <form action="paginasCliente/paginaProducto.php" method="post">
+                        <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
+                        <button type="submit">Ver producto</button>
+                    </form>
+                </article>
+                <?php
+                $contR++;  
+            }else{
+                break;
+            }
+        }
+        echo "</div>";
+    }
+    ?>
+    <h2>Articulos</h2>
     <div class="productos">
     <?php foreach($productos as $producto) { ?>
     <article class="producto">

@@ -39,12 +39,39 @@ function obtenerProductosPrecio(PDO $conn, array $ids){
     return $precios;
 }
 
+function obtenerProductosStock(PDO $conn, array $ids){
+
+    $stock = [];
+
+    foreach($ids as $id){
+        $sql = "SELECT stock FROM productos where id = ?";
+        $sentencia = $conn->prepare($sql);
+        $sentencia->execute([$id]);
+        $p = $sentencia->fetch();
+
+        $stock[] = $p;
+    }
+
+    return $stock;
+}
+
 function buscarProductos(PDO $conn, String $texto){
     $sql = "SELECT id, modelo, marca FROM productos WHERE modelo LIKE ? LIMIT 5";
     $sentencia = $conn->prepare($sql);
     $sentencia->execute([$texto . '%']);
 
     return $sentencia->fetchAll();
+}
+
+function obtenerProductoRecomendaciones(PDO $conn, int $id) : array{
+    $sql = "SELECT marca, modelo, precio, id
+            FROM productos WHERE id = :id";
+
+    $sentencia = $conn->prepare($sql);
+    $sentencia->execute([':id' => $id]);
+    $producto = $sentencia->fetch();
+
+    return $producto;
 }
 
 //DEBERIA TRAER EL ID PARA EN ENLACE DE COMPRA, MARCA Y STOCK
