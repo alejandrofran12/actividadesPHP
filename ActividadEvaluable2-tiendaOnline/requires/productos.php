@@ -39,6 +39,14 @@ function obtenerProductosPrecio(PDO $conn, array $ids){
     return $precios;
 }
 
+function buscarProductos(PDO $conn, String $texto){
+    $sql = "SELECT id, modelo, marca FROM productos WHERE modelo LIKE ? LIMIT 5";
+    $sentencia = $conn->prepare($sql);
+    $sentencia->execute([$texto . '%']);
+
+    return $sentencia->fetchAll();
+}
+
 //DEBERIA TRAER EL ID PARA EN ENLACE DE COMPRA, MARCA Y STOCK
 
 //PDO::FETCH_ASSOC para no duplicar columnas

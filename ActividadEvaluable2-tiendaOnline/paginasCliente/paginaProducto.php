@@ -2,7 +2,7 @@
 session_start();
 require "../requires/productos.php";
 
-$id = $_POST['id'];
+$id = $_POST['id'] ?? $_GET['id'];
 $producto = obtenerProducto($conn, $id);
 ?>
 

@@ -16,7 +16,30 @@ $logueado = isset($_SESSION['nombre']);
 </head>
 <body>
     <h1>TIENDA ONLINE HARDWARE</h1>
+
+    <input type="text" id="buscador" placeholder="Buscar Producto...">
+    <div id="resultados"></div>
+
+    <script>
+        const buscador = document.getElementById('buscador');
+        const resultados = document.getElementById('resultados');
+
+        buscador.addEventListener('input', function(){
+            const texto = buscador.value;
+
+            if(texto === ''){
+                resultados.innerHTML = '';
+            return;
+            }
+
+            fetch('buscar/buscar.php?q=' + texto).then(respuesta => respuesta.text())
+            .then(html => {
+                resultados.innerHTML = html;
+            });
     
+        })
+    </script>    
+
     <?php if ($logueado) {?>
         <h2>Bienvenido <?php echo $_SESSION['nombre']; ?> </h2>
         <p><a href="cerrarSesion/cerrarSesion.php">Cerrar sesion</a></p>
@@ -30,7 +53,7 @@ $logueado = isset($_SESSION['nombre']);
     <div class="productos">
     <?php foreach($productos as $producto) { ?>
     <article class="producto">
-        <h2><?php echo $producto['marca']; ?> <?php echo $producto['modelo']; ?></h2>
+        <h2><?php echo $producto['marca'] . " - "; ?> <?php echo $producto['modelo']; ?></h2>
         <p>Precio: <?php echo $producto['precio']; ?> €</p>
 
         <form action="paginasCliente/paginaProducto.php" method="post">

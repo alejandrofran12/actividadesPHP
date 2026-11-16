@@ -34,11 +34,12 @@ $cantidadIdsDistintos = count(array_unique($todosLosIds));
     <a href="../index.php">Inicio</a>
         <?php for($cont = 1; $cont<= $cantidadIdsDistintos; $cont++) {?>
         <br><br><br><br>
-        <details>    
-        <h1>Pedido <?php echo $cont?></h1>
+        <details>
+            <summary><?php echo $pedidos[$cont]['fecha'] ?></summary>    
         <?php foreach($pedidos as $pedido) {?>
             <?php if($pedido['id'] == $cont){?>
-                    <h2><?php echo $pedido['marca']; ?> <?php echo $pedido['modelo']; ?></h2>
+                    <h2><?php echo $pedido['marca']; ?> 
+                    <?php echo $pedido['modelo']; echo $pedido['cantidad']?></h2>
             <?php }?>
         <?php } echo "</details>"; } ?>
 </body>
