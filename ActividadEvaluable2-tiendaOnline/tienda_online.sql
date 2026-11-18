@@ -5,7 +5,7 @@ CREATE TABLE clientes (
   nombre VARCHAR(100) NOT NULL,
   email VARCHAR(150) NOT NULL UNIQUE,
   telefono VARCHAR(20),
-  contrasena VARCHAR(30) NOT NULL,
+  contrasena VARCHAR(255) NOT NULL,
   usuario VARCHAR(30) NOT NULL 
 );
 
