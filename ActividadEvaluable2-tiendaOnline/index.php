@@ -78,11 +78,18 @@ $logueado = isset($_SESSION['nombre']);
     ?>
     <h2>Articulos</h2>
     <div class="productos">
-    <?php foreach($productos as $producto) { ?>
+    <?php $categoriaActual = null; foreach($productos as $producto) { 
+            if($producto['nombre'] !== $categoriaActual){
+                $categoriaActual = $producto['nombre'];
+                echo "<h2 class= 'exepcion'>" . $categoriaActual . "</h2>";
+            }        
+        ?>
     <article class="producto">
         <h2><?php echo $producto['marca'] . " - "; ?> <?php echo $producto['modelo']; ?></h2>
         <p>Precio: <?php echo $producto['precio']; ?> €</p>
-
+        <?php if($producto['stock'] == 0){ ?>
+        <P>AGOTADO</P>
+        <?php } ?>
         <form action="paginasCliente/paginaProducto.php" method="post">
             <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
             <button type="submit">Ver producto</button>

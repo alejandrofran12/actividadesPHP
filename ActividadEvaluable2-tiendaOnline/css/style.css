@@ -13,3 +13,7 @@ body{
     border: 1px solid black;
     padding: 20px;
 }
+
+.exepcion {
+    grid-column: 1 / -1;
+}
