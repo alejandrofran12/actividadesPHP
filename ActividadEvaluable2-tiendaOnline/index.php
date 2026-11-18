@@ -76,7 +76,6 @@ $logueado = isset($_SESSION['nombre']);
         echo "</div>";
     }
     ?>
-    <h2>Articulos</h2>
     <div class="productos">
     <?php $categoriaActual = null; foreach($productos as $producto) { 
             if($producto['nombre'] !== $categoriaActual){
