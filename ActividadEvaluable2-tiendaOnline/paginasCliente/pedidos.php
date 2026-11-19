@@ -32,14 +32,29 @@ $cantidadIdsDistintos = count(array_unique($todosLosIds));
 <body>
     <h1>Tus pedidos</h1>
     <a href="../index.php">Inicio</a>
-        <?php for($cont = 1; $cont<= $cantidadIdsDistintos; $cont++) {?>
-        <br><br><br><br>
-        <details>
-            <summary><?php echo $pedidos[$cont]['fecha'] ?></summary>    
-        <?php foreach($pedidos as $pedido) {?>
-            <?php if($pedido['id'] == $cont){?>
-                    <h2><?php echo $pedido['marca']; ?> 
-                    <?php echo $pedido['modelo']; echo $pedido['cantidad']?></h2>
-            <?php }?>
-        <?php } echo "</details>"; } ?>
+    <?php for ($cont = 1; $cont <= $cantidadIdsDistintos; $cont++) {
+    $fecha = '';
+    foreach ($pedidos as $pedido) {
+        if ($pedido['id'] == $cont) {
+            $fecha = $pedido['fecha'];
+            break;
+        }
+    }
+    ?>
+    <br><br><br><br>
+    <details>
+        <summary><?php echo $fecha; ?></summary>
+        <?php foreach ($pedidos as $pedido) { ?>
+            <?php if ($pedido['id'] == $cont) { ?>
+                <h2>
+                    <p>marca: <?php echo $pedido['marca']; ?></p>
+                    <p> modelo: <?php echo $pedido['modelo']; ?></p>
+                    <p>Cantidad: <?php echo $pedido['cantidad']; ?></p>
+                    <p>Precio: <?php echo $pedido['precio_unitario'] ?></p>
+                    <br><br><br>
+                </h2>
+            <?php } ?>
+        <?php } ?>
+    </details>
+<?php } ?>
 </body>
